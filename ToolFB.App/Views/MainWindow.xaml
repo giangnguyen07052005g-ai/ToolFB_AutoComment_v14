@@ -1,0 +1,1034 @@
+<Window x:Class="ToolFB.App.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="GIANG DEV — Auto Bình Luận Facebook Pro v14"
+        Height="900" Width="1440" MinHeight="750" MinWidth="1200"
+        WindowStartupLocation="CenterScreen" WindowStyle="None"
+        AllowsTransparency="True" Background="Transparent"
+        Icon="pack://application:,,,/ToolFB.App;component/Assets/app_icon.ico">
+
+    <!-- LỚP KHUNG CỬA SỔ CHÍNH MODERN SAAS (Bo góc 12px, nền Dark Charcoal) -->
+    <Border Background="{StaticResource BgCanvas}" BorderBrush="{StaticResource BorderBrushColor}"
+            BorderThickness="1" CornerRadius="12">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="235" /> <!-- 1. THANH ĐIỀU HƯỚNG BÊN TRÁI (SIDEBAR) -->
+                <ColumnDefinition Width="*" />   <!-- 2. KHÔNG GIAN LÀM VIỆC CHÍNH (MAIN WORKSPACE) -->
+            </Grid.ColumnDefinitions>
+
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- 1. THANH ĐIỀU HƯỚNG BÊN TRÁI (MODERN SAAS SIDEBAR)               -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <Border Grid.Column="0" Background="{StaticResource SidebarBg}"
+                    BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="0,0,1,0" CornerRadius="12,0,0,12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70" /> <!-- Logo & Tên Phần Mềm -->
+                        <RowDefinition Height="*" />  <!-- Danh Sách Menu Điều Hướng -->
+                        <RowDefinition Height="Auto" /><!-- Thông Tin Bản Quyền & Phiên Bản Ở Đáy -->
+                    </Grid.RowDefinitions>
+
+                    <!-- Header Sidebar: Logo & Tên Phần Mềm -->
+                    <Grid Grid.Row="0" Margin="16,0,16,0" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="38" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <!-- Biểu tượng Logo tròn ánh vàng -->
+                        <Border Grid.Column="0" Background="#261E05" BorderBrush="{StaticResource PrimaryGold}"
+                                BorderThickness="1.5" CornerRadius="10" Width="36" Height="36">
+                            <TextBlock Text="⚡" FontSize="18" Foreground="{StaticResource PrimaryGold}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <!-- Nhãn nhận diện thương hiệu -->
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                            <TextBlock Text="GIANG DEV" FontWeight="Bold" FontSize="15" Foreground="{StaticResource PrimaryGold}" />
+                            <TextBlock Text="Bình Luận Pro v14" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextWhite}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Danh Sách Trang Điều Hướng (Vertical Sidebar Menu) -->
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="10,10,10,10">
+                        <StackPanel>
+                            <TextBlock Text="MENU CHÍNH" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextDim}" Margin="12,4,0,8" />
+                            <RadioButton x:Name="NavDashboard" Content="📊  Tổng Quan" Style="{StaticResource SidebarNavItem}" GroupName="MainPages" IsChecked="True" Checked="NavPage_Checked" />
+                            <RadioButton x:Name="NavTargets" Content="🎯  Mục Tiêu Bài Viết" Style="{StaticResource SidebarNavItem}" GroupName="MainPages" Checked="NavPage_Checked" />
+                            <RadioButton x:Name="NavContent" Content="✍️  Nội Dung &amp; Media" Style="{StaticResource SidebarNavItem}" GroupName="MainPages" Checked="NavPage_Checked" />
+                            <RadioButton x:Name="NavAccounts" Content="🔑  Tài Khoản &amp; Proxy" Style="{StaticResource SidebarNavItem}" GroupName="MainPages" Checked="NavPage_Checked" />
+
+                            <TextBlock Text="HỆ THỐNG &amp; CÔNG CỤ" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextDim}" Margin="12,18,0,8" />
+                            <RadioButton x:Name="NavSettings" Content="⚙️  Cấu Hình Anti-Ban" Style="{StaticResource SidebarNavItem}" GroupName="MainPages" Checked="NavPage_Checked" />
+                            <RadioButton x:Name="NavLogs" Content="📜  Nhật Ký Hoạt Động" Style="{StaticResource SidebarNavItem}" GroupName="MainPages" Checked="NavPage_Checked" />
+                            <RadioButton x:Name="NavLicense" Content="⚡  Giấy Phép &amp; Update" Style="{StaticResource SidebarNavItem}" GroupName="MainPages" Checked="NavPage_Checked" />
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Footer Sidebar: Trạng thái & Thông tin phiên bản -->
+                    <Border Grid.Row="2" Background="#0F1217" BorderBrush="{StaticResource BorderBrushColor}"
+                            BorderThickness="0,1,0,0" Padding="14,12" CornerRadius="0,0,0,12">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <Border Background="#10B981" CornerRadius="3" Width="6" Height="6" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <TextBlock x:Name="LblSidebarSystemHealth" Text="Hệ thống ổn định" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource SuccessGreen}" />
+                            </StackPanel>
+                            <TextBlock Text="Phiên bản 14.0.0 (x64 Native)" FontSize="10" Foreground="{StaticResource TextDim}" Margin="0,0,0,6" />
+                            <Border Background="#181B22" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="6" Padding="8,4" Cursor="Hand" MouseLeftButtonDown="BtnCopyHwid_MouseDown" ToolTip="Nhấp để sao chép mã máy">
+                                <Grid>
+                                    <TextBlock x:Name="LblSidebarHwid" Text="HWID: 47BC7A54C0" FontSize="10" FontFamily="Consolas, Segoe UI" Foreground="{StaticResource PrimaryGold}" VerticalAlignment="Center" />
+                                    <TextBlock Text="📋" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Center" Opacity="0.6" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- 2. KHÔNG GIAN LÀM VIỆC CHÍNH (MAIN WORKSPACE)                     -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64" /> <!-- Topbar Tiêu Đề & Nút Trạng Thái -->
+                    <RowDefinition Height="*" />  <!-- Khung Nội Dung Trang Hiện Tại -->
+                </Grid.RowDefinitions>
+
+                <!-- ── 2A. THANH TIÊU ĐỀ CHÍNH (PAGE TOPBAR) ────────────────────── -->
+                <Border Grid.Row="0" Background="{StaticResource TopbarBg}"
+                        BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="0,0,0,1"
+                        CornerRadius="0,12,0,0" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                    <Grid Margin="20,0,14,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Tiêu đề & mô tả ngắn của trang hiện tại -->
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock x:Name="LblPageTitle" Text="📊 Bảng Điều Khiển Tổng Quan" FontWeight="Bold" FontSize="16" Foreground="{StaticResource TextWhite}" />
+                            <TextBlock x:Name="LblPageSubtitle" Text="Theo dõi chỉ số chiến dịch, tiến trình thời gian thực và quản lý tương tác" FontSize="11" Foreground="{StaticResource TextMuted}" Margin="0,2,0,0" />
+                        </StackPanel>
+
+                        <!-- Góc phải: Badge trạng thái, Thẻ License, Nút Hỗ trợ & Điều khiển cửa sổ -->
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <!-- Badge Trạng Thái Động Cơ -->
+                            <Border Background="#1C212B" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="14" Padding="10,4" Margin="0,0,8,0">
+                                <TextBlock x:Name="LblTopStatus" Text="● Sẵn sàng" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextMuted}" />
+                            </Border>
+
+                            <!-- Thẻ Bản Quyền Đếm Ngược -->
+                            <Border Background="#261E05" BorderBrush="#524317" BorderThickness="1" CornerRadius="14" Padding="10,4" Margin="0,0,8,0" Cursor="Hand" ToolTip="Nhấp để xem chi tiết bản quyền" MouseLeftButtonDown="BtnLicense_Click">
+                                <TextBlock x:Name="LblLicenseTime" Text="⏳ Bản quyền: Đang kiểm tra..." FontSize="11" FontWeight="Bold" Foreground="{StaticResource PrimaryGold}" />
+                            </Border>
+
+                            <!-- Nút Telegram Admin Hỗ Trợ -->
+                            <Button Content="✈️ Hỗ Trợ Telegram" Style="{StaticResource BtnBase}" Height="30" Padding="10,2" Margin="0,0,12,0" Click="BtnTelegram_Click" />
+
+                            <!-- Điều Khiển Cửa Sổ 3 Dấu Chấm Màu macOS (Vàng, Xanh, Đỏ) -->
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                                <Button ToolTip="Thu nhỏ cửa sổ (Minimize)" Style="{StaticResource MacTrafficDot}"
+                                        Background="#F59E0B" BorderBrush="#D97706" Content="—" Click="BtnMinimize_Click" />
+                                <Button x:Name="BtnMaximize" ToolTip="Phóng to / Khôi phục (Maximize)" Style="{StaticResource MacTrafficDot}"
+                                        Background="#10B981" BorderBrush="#059669" Content="+" Click="BtnMaximize_Click" />
+                                <Button ToolTip="Đóng ứng dụng (Close)" Style="{StaticResource MacTrafficDot}"
+                                        Background="#EF4444" BorderBrush="#DC2626" Content="✕" Click="BtnClose_Click" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- ── 2B. KHUNG NỘI DUNG CÁC TRANG (PAGE HOST) ─────────────────── -->
+                <Grid Grid.Row="1" Margin="20,16,20,16">
+
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <!-- TRANG 1: 📊 BẢNG ĐIỀU KHIỂN TỔNG QUAN (DASHBOARD)            -->
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <Grid x:Name="PageDashboard" Visibility="Visible">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" /> <!-- 4 Thẻ KPI Metrics -->
+                            <RowDefinition Height="Auto" /> <!-- Live Campaign Banner & Nút Bắt Đầu/Dừng -->
+                            <RowDefinition Height="*" />    <!-- 2 Cột: Hoạt Động Gần Đây & Thao Tác Nhanh -->
+                        </Grid.RowDefinitions>
+
+                        <!-- 4 Thẻ KPI Metrics Hiện Đại -->
+                        <Grid Grid.Row="0" Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Metric 1: Mục Tiêu Bài Viết -->
+                            <Border Grid.Column="0" Style="{StaticResource MetricCard}" Margin="0,0,6,0">
+                                <Grid>
+                                    <StackPanel>
+                                        <TextBlock Text="BÀI VIẾT MỤC TIÊU" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextDim}" />
+                                        <TextBlock x:Name="DashTargetsCount" Text="0" FontSize="26" FontWeight="Bold" Foreground="{StaticResource TextWhite}" Margin="0,4,0,2" />
+                                        <TextBlock x:Name="DashTargetsSelected" Text="Đã chọn: 0 bài" FontSize="11" Foreground="{StaticResource PrimaryGold}" />
+                                    </StackPanel>
+                                    <TextBlock Text="🎯" FontSize="28" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0.25" />
+                                </Grid>
+                            </Border>
+
+                            <!-- Metric 2: Tài Khoản Hoạt Động -->
+                            <Border Grid.Column="1" Style="{StaticResource MetricCard}" Margin="6,0,6,0">
+                                <Grid>
+                                    <StackPanel>
+                                        <TextBlock Text="TÀI KHOẢN LIVE" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextDim}" />
+                                        <TextBlock x:Name="DashAccountsLive" Text="0" FontSize="26" FontWeight="Bold" Foreground="{StaticResource SuccessGreen}" Margin="0,4,0,2" />
+                                        <TextBlock x:Name="DashAccountsTotal" Text="Tổng số: 0 tài khoản" FontSize="11" Foreground="{StaticResource TextMuted}" />
+                                    </StackPanel>
+                                    <TextBlock Text="🔑" FontSize="28" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0.25" />
+                                </Grid>
+                            </Border>
+
+                            <!-- Metric 3: Đã Bình Luận Thành Công -->
+                            <Border Grid.Column="2" Style="{StaticResource MetricCard}" Margin="6,0,6,0">
+                                <Grid>
+                                    <StackPanel>
+                                        <TextBlock Text="BÌNH LUẬN THÀNH CÔNG" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextDim}" />
+                                        <TextBlock x:Name="DashSuccessComments" Text="0" FontSize="26" FontWeight="Bold" Foreground="{StaticResource PrimaryGold}" Margin="0,4,0,2" />
+                                        <TextBlock x:Name="DashTargetGoal" Text="Mục tiêu: 0 lượt" FontSize="11" Foreground="{StaticResource TextMuted}" />
+                                    </StackPanel>
+                                    <TextBlock Text="💬" FontSize="28" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0.25" />
+                                </Grid>
+                            </Border>
+
+                            <!-- Metric 4: Lỗi & Cảnh Báo -->
+                            <Border Grid.Column="3" Style="{StaticResource MetricCard}" Margin="6,0,0,0">
+                                <Grid>
+                                    <StackPanel>
+                                        <TextBlock Text="THẤT BẠI &amp; CHẶN" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextDim}" />
+                                        <TextBlock x:Name="DashFailComments" Text="0" FontSize="26" FontWeight="Bold" Foreground="{StaticResource DangerRed}" Margin="0,4,0,2" />
+                                        <TextBlock x:Name="DashBlockedAccounts" Text="Tài khoản Block: 0" FontSize="11" Foreground="{StaticResource TextMuted}" />
+                                    </StackPanel>
+                                    <TextBlock Text="⚠️" FontSize="28" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="0.25" />
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <!-- Live Campaign Execution Card (Trung tâm điều khiển chiến dịch) -->
+                        <Border Grid.Row="1" Style="{StaticResource CardPanel}" Margin="0,0,0,16">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <DockPanel Grid.Row="0" Margin="0,0,0,10">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="⚡ TRUNG TÂM ĐIỀU PHỐI CHIẾN DỊCH REALTIME" FontWeight="Bold" FontSize="13" Foreground="{StaticResource TextWhite}" />
+                                        <Border Background="#1E232B" CornerRadius="6" Padding="6,2" Margin="10,0,0,0">
+                                            <TextBlock x:Name="LblDashStatusBanner" Text="Hệ thống đang chờ kích hoạt" FontSize="11" Foreground="{StaticResource PrimaryGold}" />
+                                        </Border>
+                                    </StackPanel>
+                                    <!-- Nút điều khiển chiến dịch chính -->
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button x:Name="BtnTopStart" Content="▶ BẮT ĐẦU CHIẾN DỊCH" Style="{StaticResource BtnPrimary}" MinWidth="160" Height="34" Margin="0,0,6,0" Click="BtnStart_Click" />
+                                        <Button x:Name="BtnTopPause" Content="⏸ TẠM DỪNG" Style="{StaticResource BtnWarning}" MinWidth="110" Height="34" Margin="0,0,6,0" IsEnabled="False" Click="BtnPause_Click" />
+                                        <Button x:Name="BtnTopStop" Content="■ DỪNG HẲN" Style="{StaticResource BtnDanger}" MinWidth="95" Height="34" Margin="0,0,6,0" IsEnabled="False" Click="BtnStop_Click" />
+                                        <Button Content="💾 Lưu Cấu Hình" Style="{StaticResource BtnBase}" MinWidth="110" Height="34" Click="BtnSaveConfig_Click" />
+                                    </StackPanel>
+                                </DockPanel>
+
+                                <!-- Tiến độ hoàn thành -->
+                                <Grid Grid.Row="1" Margin="0,0,0,6">
+                                    <TextBlock Text="Tiến độ thực thi chiến dịch:" FontSize="11" Foreground="{StaticResource TextMuted}" VerticalAlignment="Center" />
+                                    <TextBlock x:Name="LblProgressPercent" Text="0%" FontWeight="Bold" FontSize="12" Foreground="{StaticResource PrimaryGold}" HorizontalAlignment="Right" />
+                                </Grid>
+                                <ProgressBar Grid.Row="2" x:Name="CampaignProgress" Minimum="0" Maximum="100" Value="0" Height="8" />
+
+                                <!-- Dải Tóm Tắt & Kiểm Soát Cấu Hình Chiến Dịch (Kiểm soát 1 tầm mắt) -->
+                                <Border Grid.Row="3" Background="#14171E" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="6" Padding="12,7" Margin="0,10,0,0">
+                                    <DockPanel>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="⚙️ THÔNG SỐ ĐANG CHẠY:" FontWeight="Bold" FontSize="11" Foreground="{StaticResource PrimaryGold}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                            <TextBlock x:Name="LblDashConfigSummary" Text="3 Luồng | Delay 30-60s | Max 50 cmt/token | Max 1 cmt/bài | Nghỉ 10/60s | Round-Robin: Bật" FontSize="11" Foreground="{StaticResource TextWhite}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <Button Content="⚙️ Tùy Chỉnh Cấu Hình →" Style="{StaticResource BtnGhost}" FontSize="11" HorizontalAlignment="Right" VerticalAlignment="Center" Click="BtnGotoSettings_Click" />
+                                    </DockPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- 2 Cột: Hoạt Động Gần Đây (Trái) & Thao Tác Nhanh (Phải) -->
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.4*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Cột Trái: Hoạt Động Gần Đây (Feed Logs tóm tắt) -->
+                            <Border Grid.Column="0" Style="{StaticResource CardPanel}" Margin="0,0,8,0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <DockPanel Grid.Row="0" Margin="0,0,0,10">
+                                        <TextBlock Text="📜 NHẬT KÝ HOẠT ĐỘNG GẦN ĐÂY" FontWeight="Bold" FontSize="12" Foreground="{StaticResource TextWhite}" />
+                                        <Button Content="Xem Toàn Bộ Nhật Ký →" Style="{StaticResource BtnGhost}" FontSize="11" HorizontalAlignment="Right" Click="BtnGotoLogs_Click" />
+                                    </DockPanel>
+
+                                    <!-- Danh sách log gần nhất -->
+                                    <ListBox Grid.Row="1" x:Name="DashMiniLogs" Background="Transparent" BorderThickness="0"
+                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="0,3">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="60" />
+                                                        <ColumnDefinition Width="65" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="{Binding Timestamp}" Foreground="{StaticResource TextDim}" FontFamily="Consolas, Segoe UI" FontSize="10" VerticalAlignment="Center" />
+                                                    <Border Grid.Column="1" Background="{Binding BadgeBackground}" BorderBrush="{Binding BadgeBorder}" BorderThickness="1" CornerRadius="4" Padding="4,1" Margin="2,0,6,0" HorizontalAlignment="Center">
+                                                        <TextBlock Text="{Binding Level}" Foreground="{Binding ForegroundBrush}" FontWeight="Bold" FontSize="9" />
+                                                    </Border>
+                                                    <TextBlock Grid.Column="2" Text="{Binding Message}" Foreground="{Binding ForegroundBrush}" FontSize="11" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
+                            </Border>
+
+                            <!-- Cột Phải: Thao Tác Nhanh (Quick Actions) -->
+                            <Border Grid.Column="1" Style="{StaticResource CardPanel}" Margin="8,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="⚡ THAO TÁC NHANH" FontWeight="Bold" FontSize="12" Foreground="{StaticResource TextWhite}" Margin="0,0,0,12" />
+
+                                    <Button Content="🎯 Nạp Bài Viết Mục Tiêu" Style="{StaticResource BtnBase}" Height="34" Margin="0,0,0,8" HorizontalContentAlignment="Left" Padding="12,0" Click="BtnGotoTargets_Click" />
+                                    <Button Content="✍️ Soạn Thảo &amp; Thử Spintax" Style="{StaticResource BtnBase}" Height="34" Margin="0,0,0,8" HorizontalContentAlignment="Left" Padding="12,0" Click="BtnGotoContent_Click" />
+                                    <Button Content="🔑 Kiểm Tra Trạng Thái Token" Style="{StaticResource BtnBase}" Height="34" Margin="0,0,0,8" HorizontalContentAlignment="Left" Padding="12,0" Click="BtnCheckLiveDie_Click" />
+                                    <Button Content="🌐 Kiểm Tra Proxy &amp; IP Thực" Style="{StaticResource BtnBase}" Height="34" Margin="0,0,0,8" HorizontalContentAlignment="Left" Padding="12,0" Click="BtnCheckProxies_Click" />
+                                    <Button Content="🔄 Kiểm Tra Bản Cập Nhật Mới" Style="{StaticResource BtnBase}" Height="34" Margin="0,0,0,8" HorizontalContentAlignment="Left" Padding="12,0" Click="BtnCheckUpdate_Click" />
+
+                                    <Border Background="#14171E" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,8,0,0">
+                                        <TextBlock Text="💡 Mẹo: Toàn bộ cấu hình và Token được tự động mã hóa bằng Windows DPAPI an toàn tuyệt đối." FontSize="11" Foreground="{StaticResource TextDim}" TextWrapping="Wrap" />
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <!-- TRANG 2: 🎯 QUẢN LÝ MỤC TIÊU (TARGET POSTS)                 -->
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <Grid x:Name="PageTargets" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" /> <!-- Ô nhập liệu & Thanh công cụ -->
+                            <RowDefinition Height="*" />    <!-- Bảng DataGrid ảo hóa -->
+                        </Grid.RowDefinitions>
+
+                        <!-- Card Nhập Liệu & Toolbar Phân Cấp Rõ Ràng -->
+                        <Border Grid.Row="0" Style="{StaticResource CardPanel}" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="75" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <DockPanel Grid.Row="0" Margin="0,0,0,6">
+                                    <TextBlock Text="Dán danh sách ID hoặc Link (Post / Group / Reel / Story):" FontSize="12" Foreground="{StaticResource TextMuted}" />
+                                    <TextBlock x:Name="LblInputPostCounter" Text="Đã nhận diện: 0 dòng" FontSize="12" Foreground="{StaticResource PrimaryGold}" HorizontalAlignment="Right" />
+                                </DockPanel>
+
+                                <TextBox Grid.Row="1" x:Name="TxtPostIds" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="0,0,0,8"
+                                         TextChanged="TxtPostIds_TextChanged" />
+
+                                <!-- Thanh công cụ phân chia nhóm logic chuyên nghiệp -->
+                                <Grid Grid.Row="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Hàng 1: Nạp bài, Chọn, Xóa & Tổng số bài -->
+                                    <DockPanel Grid.Row="0" Margin="0,0,0,8">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <!-- Nhóm Nhập -->
+                                            <Button Content="📥 Nạp Vào Bảng" Style="{StaticResource BtnPrimary}" Height="30" Padding="14,0" Margin="0,0,6,0" Click="BtnLoadPosts_Click" />
+                                            <Button Content="📂 Nhập File .txt" Style="{StaticResource BtnBase}" Height="30" Padding="12,0" Margin="0,0,12,0" Click="BtnImportPosts_Click" />
+
+                                            <Border Width="1" Height="18" Background="{StaticResource BorderBrushColor}" Margin="0,0,12,0" VerticalAlignment="Center" />
+
+                                            <!-- Nhóm Chọn -->
+                                            <Button Content="☑ Chọn Hết" Style="{StaticResource BtnBase}" Height="30" Margin="0,0,4,0" Click="BtnSelectAllPosts_Click" />
+                                            <Button Content="☐ Bỏ Chọn" Style="{StaticResource BtnBase}" Height="30" Margin="0,0,12,0" Click="BtnDeselectAllPosts_Click" />
+
+                                            <Border Width="1" Height="18" Background="{StaticResource BorderBrushColor}" Margin="0,0,12,0" VerticalAlignment="Center" />
+
+                                            <!-- Nhóm Xóa -->
+                                            <Button Content="🗑 Xóa Chọn" Style="{StaticResource BtnDanger}" Height="30" Margin="0,0,4,0" Click="BtnDeleteSelectedPosts_Click" />
+                                            <Button Content="❌ Xóa Tất Cả" Style="{StaticResource BtnBase}" Height="30" Click="BtnClearAllPosts_Click" />
+                                        </StackPanel>
+
+                                        <!-- Badge tổng số bài góc phải -->
+                                        <Border Background="#1C212B" BorderBrush="{StaticResource BorderLight}" BorderThickness="1" CornerRadius="6" Padding="10,4" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <TextBlock x:Name="LblPostCountDetail" Text="Tổng: 0 bài | Đã chọn: 0 bài" FontWeight="Bold" FontSize="11" Foreground="{StaticResource PrimaryGold}" />
+                                        </Border>
+                                    </DockPanel>
+
+                                    <!-- Hàng 2: Tìm kiếm UID, 1 Bài / Page & Dọn dẹp theo số cmt -->
+                                    <DockPanel Grid.Row="1">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="🔍 Tìm UID:" FontSize="12" Foreground="{StaticResource TextMuted}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                            <TextBox x:Name="EntSearchPosts" Width="180" Height="28" Padding="8,2" Margin="0,0,10,0" ToolTip="Nhập UID để tìm kiếm nhanh trong bảng" TextChanged="TxtSearchPosts_TextChanged" />
+
+                                            <Button Content="🎲 Lọc 1 Bài / Page" Style="{StaticResource BtnWarning}" Height="28" Padding="10,0" Margin="0,0,14,0" Click="BtnPickRandomPerPage_Click" />
+
+                                            <Border Width="1" Height="18" Background="{StaticResource BorderBrushColor}" Margin="0,0,12,0" VerticalAlignment="Center" />
+
+                                            <TextBlock Text="Đã bình luận >= " FontSize="12" Foreground="{StaticResource TextMuted}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                            <TextBox x:Name="EntDelCmtCount" Text="1" Width="36" Height="28" HorizontalContentAlignment="Center" Margin="0,0,6,0" />
+                                            <TextBlock Text="lượt" FontSize="12" Foreground="{StaticResource TextMuted}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                            <Button Content="🧹 Xóa Đạt Chỉ Tiêu" Style="{StaticResource BtnBase}" Height="28" Padding="10,0" Click="BtnDeleteCommentedPosts_Click" />
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- Bảng Dữ Liệu Virtualized DataGrid -->
+                        <Border Grid.Row="1" Style="{StaticResource CardPanel}">
+                            <Grid>
+                                <DataGrid x:Name="GridPosts" ItemsSource="{Binding TargetPosts}"
+                                          VirtualizingStackPanel.IsVirtualizing="True"
+                                          VirtualizingStackPanel.VirtualizationMode="Recycling"
+                                          ScrollViewer.CanContentScroll="True">
+                                    <DataGrid.Columns>
+                                        <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" Width="45">
+                                            <DataGridCheckBoxColumn.HeaderTemplate>
+                                                <DataTemplate><TextBlock Text="Chọn" /></DataTemplate>
+                                            </DataGridCheckBoxColumn.HeaderTemplate>
+                                        </DataGridCheckBoxColumn>
+                                        <DataGridTextColumn Header="STT" Binding="{Binding Index}" Width="50" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Mã Mục Tiêu (Target ID)" Binding="{Binding TargetId}" Width="190" IsReadOnly="True">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="FontFamily" Value="Consolas, Segoe UI" />
+                                                    <Setter Property="FontWeight" Value="Bold" />
+                                                    <Setter Property="Foreground" Value="{StaticResource PrimaryGold}" />
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Đường Dẫn Gốc (URL)" Binding="{Binding OriginalUrl}" Width="380" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Tiến Độ" Binding="{Binding ProgressText}" Width="85" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Trạng Thái" Binding="{Binding Status}" Width="120" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Ghi Chú &amp; Chi Tiết Lỗi" Binding="{Binding ErrorDetail}" Width="*" IsReadOnly="True" />
+                                        <DataGridTemplateColumn Header="Hành Động" Width="95">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="🌐 Xem Bài" Style="{StaticResource BtnBase}" Height="24" Padding="6,1"
+                                                            Tag="{Binding OriginalUrl}" Click="BtnOpenPostUrl_Click" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <!-- Empty State Minh Họa -->
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TargetPosts.Count}" Value="0">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <TextBlock Text="🎯" FontSize="42" HorizontalAlignment="Center" Opacity="0.3" Margin="0,0,0,8" />
+                                    <TextBlock Text="Chưa có bài viết mục tiêu nào" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextWhite}" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Dán ID/Link vào ô bên trên hoặc bấm 'Nhập File .txt' để bắt đầu" FontSize="12" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <!-- TRANG 3: ✍️ NỘI DUNG BÌNH LUẬN & MEDIA STUDIO                -->
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <Grid x:Name="PageContent" Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.1*" /> <!-- Panel Văn bản & Spintax -->
+                            <ColumnDefinition Width="0.9*" /> <!-- Panel Tệp Đính Kèm & Thumbnail -->
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Cột Trái: Soạn Thảo Spintax & Dynamic Tags -->
+                        <Border Grid.Column="0" Style="{StaticResource CardPanel}" Margin="0,0,8,0">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel>
+                                    <TextBlock Text="1. Nội dung cố định (Luôn xuất hiện nếu có):" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextMuted}" Margin="0,0,0,4" />
+                                    <TextBox x:Name="TxtFixedComment" Height="65" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="0,0,0,10" />
+
+                                    <TextBlock Text="2. Danh sách nội dung thay thế (Hỗ trợ Spintax đệ quy lồng nhau):" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextMuted}" Margin="0,0,0,4" />
+                                    <TextBox x:Name="TxtRandomComments" Height="105" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="0,0,0,8" />
+
+                                    <!-- Quick Insert Tags -->
+                                    <TextBlock Text="3. Chèn nhanh biến mẫu (Dynamic Tags):" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextMuted}" Margin="0,0,0,4" />
+                                    <WrapPanel Margin="0,0,0,10">
+                                        <Button Content="⏱ {time}" Style="{StaticResource BtnBase}" Height="28" Margin="0,0,5,5" Click="BtnInsertTag_Click" Tag="{}{time}" />
+                                        <Button Content="📅 {date}" Style="{StaticResource BtnBase}" Height="28" Margin="0,0,5,5" Click="BtnInsertTag_Click" Tag="{}{date}" />
+                                        <Button Content="☀️ {greeting}" Style="{StaticResource BtnBase}" Height="28" Margin="0,0,5,5" Click="BtnInsertTag_Click" Tag="{}{greeting}" />
+                                        <Button Content="🔢 {rand_num}" Style="{StaticResource BtnBase}" Height="28" Margin="0,0,5,5" Click="BtnInsertTag_Click" Tag="{}{rand_num}" />
+                                        <Button Content="⏺ {dot}" Style="{StaticResource BtnBase}" Height="28" Margin="0,0,5,5" Click="BtnInsertTag_Click" Tag="{}{dot}" />
+                                    </WrapPanel>
+
+                                    <!-- Micro-Salting Card -->
+                                    <Border Background="#14171E" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,0,0,12">
+                                        <StackPanel>
+                                            <TextBlock Text="🛡️ Micro-Salting Chống Trùng Lặp Thuật Toán:" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource PrimaryGold}" Margin="0,0,0,6" />
+                                            <Grid Margin="0,0,0,6">
+                                                <TextBlock Text="Danh mục Icon chèn đuôi:" FontSize="12" Foreground="{StaticResource TextBody}" VerticalAlignment="Center" />
+                                                <ComboBox x:Name="CboIconCategory" Width="160" HorizontalAlignment="Right" SelectionChanged="CboIconCategory_SelectionChanged">
+                                                    <ComboBoxItem Content="🎲 Hỗn Hợp" IsSelected="True" />
+                                                    <ComboBoxItem Content="🔥 Nổi Bật" />
+                                                    <ComboBoxItem Content="❤️ Trái Tim" />
+                                                    <ComboBoxItem Content="🌸 Hoa Quả" />
+                                                    <ComboBoxItem Content="💼 Kinh Doanh" />
+                                                </ComboBox>
+                                            </Grid>
+                                            <CheckBox x:Name="ChkIconNewline" Content="Tự động xuống dòng trước khi gắn icon" Margin="0,0,0,6" />
+                                            <CheckBox x:Name="ChkMicroSalt" Content="Kích hoạt Micro-Salting vi lượng" IsChecked="True" Margin="0,0,0,6" />
+
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                <TextBlock Text="Thứ tự ghép:" FontSize="12" Foreground="{StaticResource TextBody}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                                <RadioButton x:Name="RadRandomFirst" Content="🎲 Ngẫu nhiên trước" Style="{StaticResource SubSegmentedPill}" IsChecked="True" />
+                                                <RadioButton x:Name="RadFixedFirst" Content="📌 Cố định trước" Style="{StaticResource SubSegmentedPill}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Live Spintax Preview Section -->
+                                    <Border Background="#171C24" BorderBrush="{StaticResource BorderLight}" BorderThickness="1" CornerRadius="8" Padding="10">
+                                        <StackPanel>
+                                            <DockPanel Margin="0,0,0,6">
+                                                <TextBlock Text="👁️ BỘ XEM TRƯỚC BÌNH LUẬN MẪU (LIVE PREVIEW)" FontWeight="Bold" FontSize="11" Foreground="{StaticResource PrimaryGold}" />
+                                                <Button Content="🎲 Xem Thử Mẫu Khác" Style="{StaticResource BtnWarning}" Height="24" Padding="8,1" HorizontalAlignment="Right" Click="BtnPreviewComment_Click" />
+                                            </DockPanel>
+                                            <TextBox x:Name="TxtCommentPreview" Height="55" TextWrapping="Wrap" IsReadOnly="True"
+                                                     Background="#111317" Foreground="{StaticResource TextWhite}" BorderBrush="{StaticResource PrimaryGold}" />
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+
+                        <!-- Cột Phải: Quản Lý Ảnh & Thumbnail Preview -->
+                        <Border Grid.Column="1" Style="{StaticResource CardPanel}" Margin="8,0,0,0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                                    <Button Content="📂 Chọn Ảnh Đính Kèm" Style="{StaticResource BtnPrimary}" Height="30" Padding="12,2" Margin="0,0,8,0" Click="BtnBrowseImage_Click" />
+                                    <Button Content="❌ Hủy Đính Kèm" Style="{StaticResource BtnDanger}" Height="30" Padding="10,2" Click="BtnRemoveImage_Click" />
+                                </StackPanel>
+
+                                <!-- Khung Xem Trước Ảnh Thu Nhỏ (Live Thumbnail Preview) -->
+                                <Border Grid.Row="1" Background="#111317" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="8" Padding="8">
+                                    <Grid>
+                                        <Image x:Name="ImgThumbnailPreview" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        <StackPanel x:Name="PnlNoImageNotice" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <TextBlock Text="🖼️" FontSize="42" HorizontalAlignment="Center" Opacity="0.3" Margin="0,0,0,8" />
+                                            <TextBlock Text="Chưa chọn ảnh đính kèm" FontWeight="Bold" FontSize="13" Foreground="{StaticResource TextWhite}" HorizontalAlignment="Center" />
+                                            <TextBlock Text="Bình luận sẽ gửi văn bản thuần túy." FontSize="11" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Thông số kỹ thuật ảnh -->
+                                <Border Grid.Row="2" Background="#14171E" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,10,0,0">
+                                    <StackPanel>
+                                        <TextBlock x:Name="LblImagePath" Text="Đường dẫn: (Trống)" FontSize="11" Foreground="{StaticResource TextMuted}" TextTrimming="CharacterEllipsis" Margin="0,0,0,2" />
+                                        <TextBlock x:Name="LblImageSpecs" Text="Kích thước: 0 x 0 px  |  Dung lượng: 0 KB" FontSize="11" Foreground="{StaticResource TextDim}" Margin="0,0,0,6" />
+                                        <TextBlock Text="🛡️ Anti-pHash: Tự động khử EXIF, vi cắt 1-2px &amp; vi chỉnh nén JPEG biến thiên khi upload." FontSize="11" Foreground="{StaticResource SuccessGreen}" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <!-- TRANG 4: 🔑 TÀI KHOẢN & PROXY (ACCOUNTS & PROXIES)           -->
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <Grid x:Name="PageAccounts" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Card Nhập Liệu & Toolbar -->
+                        <Border Grid.Row="0" Style="{StaticResource CardPanel}" Margin="0,0,0,12">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="65" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0" Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.4*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" x:Name="TxtAccounts" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="0,0,6,0" ToolTip="Nhập danh sách Token: UID|Token hoặc UID|Pass|2FA|Token|Proxy" />
+                                    <TextBox Grid.Column="1" x:Name="TxtProxies" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="6,0,0,0" ToolTip="Proxy dự phòng: IP:Port hoặc IP:Port:User:Pass" />
+                                </Grid>
+
+                                <!-- Thanh công cụ tài khoản phân cấp rõ ràng -->
+                                <Grid Grid.Row="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Hàng 1: Nạp, Check Live/Die, Check Proxy & Badge thông số -->
+                                    <DockPanel Grid.Row="0" Margin="0,0,0,8">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Button Content="📥 Nạp Tài Khoản" Style="{StaticResource BtnPrimary}" Height="30" Padding="14,0" Margin="0,0,6,0" Click="BtnLoadAccounts_Click" />
+                                            <Button Content="📂 Nhập File .txt" Style="{StaticResource BtnBase}" Height="30" Padding="12,0" Margin="0,0,12,0" Click="BtnImportAccounts_Click" />
+
+                                            <Border Width="1" Height="18" Background="{StaticResource BorderBrushColor}" Margin="0,0,12,0" VerticalAlignment="Center" />
+
+                                            <Button Content="⚡ Check Live/Die" Style="{StaticResource BtnSuccess}" Height="30" Padding="12,0" Margin="0,0,6,0" Click="BtnCheckLiveDie_Click" />
+                                            <Button Content="🌐 Kiểm Tra Proxy" Style="{StaticResource BtnBase}" Height="30" Padding="12,0" Margin="0,0,6,0" Click="BtnCheckProxies_Click" />
+                                            <Button Content="📋 Copy Token Live" Style="{StaticResource BtnBase}" Height="30" Padding="12,0" Click="BtnCopyLiveTokens_Click" />
+                                        </StackPanel>
+
+                                        <!-- Badge thống kê tài khoản góc phải -->
+                                        <Border Background="#1C212B" BorderBrush="{StaticResource BorderLight}" BorderThickness="1" CornerRadius="6" Padding="10,4" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <TextBlock x:Name="LblAccountCountDetail" Text="Tổng: 0 | Live: 0 | Die: 0" FontWeight="Bold" FontSize="11" Foreground="{StaticResource PrimaryGold}" />
+                                        </Border>
+                                    </DockPanel>
+
+                                    <!-- Hàng 2: Chọn, Bỏ chọn & Dọn dẹp -->
+                                    <DockPanel Grid.Row="1">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Button Content="☑ Chọn Hết" Style="{StaticResource BtnBase}" Height="28" Padding="10,0" Margin="0,0,4,0" Click="BtnSelectAllAccounts_Click" />
+                                            <Button Content="☐ Bỏ Chọn" Style="{StaticResource BtnBase}" Height="28" Padding="10,0" Margin="0,0,12,0" Click="BtnDeselectAllAccounts_Click" />
+
+                                            <Border Width="1" Height="18" Background="{StaticResource BorderBrushColor}" Margin="0,0,12,0" VerticalAlignment="Center" />
+
+                                            <Button Content="🗑 Xóa Đã Chọn" Style="{StaticResource BtnDanger}" Height="28" Padding="10,0" Margin="0,0,6,0" Click="BtnDeleteSelectedAccounts_Click" />
+                                            <Button Content="🧹 Xóa Tài Khoản Die / Block" Style="{StaticResource BtnBase}" Height="28" Padding="10,0" Click="BtnDeleteDieAccounts_Click" />
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- Virtualized Accounts DataGrid -->
+                        <Border Grid.Row="1" Style="{StaticResource CardPanel}">
+                            <Grid>
+                                <DataGrid x:Name="GridAccounts" ItemsSource="{Binding Accounts}"
+                                          VirtualizingStackPanel.IsVirtualizing="True"
+                                          VirtualizingStackPanel.VirtualizationMode="Recycling"
+                                          ScrollViewer.CanContentScroll="True">
+                                    <DataGrid.Columns>
+                                        <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" Width="45">
+                                            <DataGridCheckBoxColumn.HeaderTemplate>
+                                                <DataTemplate><TextBlock Text="Chọn" /></DataTemplate>
+                                            </DataGridCheckBoxColumn.HeaderTemplate>
+                                        </DataGridCheckBoxColumn>
+                                        <DataGridTextColumn Header="STT" Binding="{Binding Index}" Width="45" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="UID Facebook" Binding="{Binding Uid}" Width="150" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Tên Tài Khoản" Binding="{Binding Name}" Width="150" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Token (Bảo Mật)" Binding="{Binding MaskedToken}" Width="160" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Trạng Thái" Binding="{Binding Status}" Width="100" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Proxy Đang Gán" Binding="{Binding ProxyStr}" Width="180" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="IP Thực" Binding="{Binding RealExitIp}" Width="110" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="CHỜ DELAY" Binding="{Binding DelayStatus}" Width="100" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Số Cmt" Binding="{Binding CmtCount}" Width="65" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Strikes" Binding="{Binding BlockStrikes}" Width="70" IsReadOnly="True" />
+                                        <DataGridTextColumn Header="Ghi Chú" Binding="{Binding Note}" Width="*" IsReadOnly="True" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <!-- Empty State -->
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Accounts.Count}" Value="0">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <TextBlock Text="🔑" FontSize="42" HorizontalAlignment="Center" Opacity="0.3" Margin="0,0,0,8" />
+                                    <TextBlock Text="Chưa có tài khoản Facebook nào" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextWhite}" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Dán Token vào ô bên trên hoặc bấm 'Nhập File .txt' để nạp tài khoản" FontSize="12" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <!-- TRANG 5: ⚙️ TRUNG TÂM CẤU HÌNH & ANTI-BAN TẬP TRUNG        -->
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <Grid x:Name="PageSettings" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" /> <!-- Thanh Chọn Nhanh Profile Cấu Hình -->
+                            <RowDefinition Height="*" />    <!-- Lưới 2 Cột Cân Xứng Rộng Rãi -->
+                            <RowDefinition Height="Auto" /> <!-- Thanh Nút Hành Động Ở Đáy -->
+                        </Grid.RowDefinitions>
+
+                        <!-- 1. Thanh Chọn Profile Cấu Hình 1-Click (Tối Ưu Trải Nghiệm Người Dùng) -->
+                        <Border Grid.Row="0" Background="#161A22" BorderBrush="{StaticResource BorderLight}" BorderThickness="1" CornerRadius="8" Padding="14,10" Margin="0,0,0,12">
+                            <DockPanel>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="⚡ CẤU HÌNH NHANH (PROFILES):" FontWeight="Bold" FontSize="12" Foreground="{StaticResource PrimaryGold}" VerticalAlignment="Center" Margin="0,0,14,0" />
+                                    <Button x:Name="BtnProfileSafe" Content="🛡️ An Toàn Cao (Khuyên Dùng)" Style="{StaticResource BtnSuccess}" Height="30" Padding="12,0" Margin="0,0,8,0" Click="BtnProfileSafe_Click" ToolTip="3 luồng, delay 30-60s, nghỉ 10 cmt/60s, bật Warmup &amp; Reaction" />
+                                    <Button x:Name="BtnProfileFast" Content="🚀 Tăng Tốc (Turbo)" Style="{StaticResource BtnWarning}" Height="30" Padding="12,0" Margin="0,0,8,0" Click="BtnProfileFast_Click" ToolTip="5 luồng, delay 15-30s, nghỉ 15 cmt/30s" />
+                                    <Button x:Name="BtnProfileStealth" Content="🐢 Nuôi Nick (Siêu Chậm)" Style="{StaticResource BtnBase}" Height="30" Padding="12,0" Click="BtnProfileStealth_Click" ToolTip="1 luồng, delay 60-120s, nghỉ 5 cmt/120s, siêu bền nick" />
+                                </StackPanel>
+                                <TextBlock Text="💡 Bấm 1 nút để tự động áp dụng thông số chuẩn tối ưu" FontSize="11" Foreground="{StaticResource TextDim}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </DockPanel>
+                        </Border>
+
+                        <!-- 2. Lưới 2 Cột Cấu Hình Rộng Rãi & Trực Quan (Thay Cho 3 Cột Hẹp Cũ) -->
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1.15*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- CỘT 1 (TRÁI): TỐC ĐỘ, LUỒNG & PHÂN BỔ BÌNH LUẬN -->
+                                <Border Grid.Column="0" Style="{StaticResource CardPanel}" Margin="0,0,8,0">
+                                    <StackPanel>
+                                        <DockPanel Margin="0,0,0,14">
+                                            <TextBlock Text="🚀 VẬN HÀNH ĐA LUỒNG &amp; TỐC ĐỘ CHIẾN DỊCH" FontWeight="Bold" FontSize="13" Foreground="{StaticResource PrimaryGold}" VerticalAlignment="Center" />
+                                            <Border Background="#261E05" CornerRadius="4" Padding="6,2" HorizontalAlignment="Right">
+                                                <TextBlock Text="Hiệu Suất" FontSize="10" FontWeight="Bold" Foreground="{StaticResource PrimaryGold}" />
+                                            </Border>
+                                        </DockPanel>
+
+                                        <!-- Hàng 1: Số Luồng Chạy Song Song -->
+                                        <Border Background="#161920" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,0,0,10">
+                                            <DockPanel>
+                                                <StackPanel VerticalAlignment="Center">
+                                                    <TextBlock Text="Số luồng chạy song song (Slots / Workers)" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextWhite}" />
+                                                    <TextBlock Text="Số tài khoản Facebook cùng bình luận đồng thời (Khuyên dùng: 2 - 5)" FontSize="11" Foreground="{StaticResource TextDim}" Margin="0,2,0,0" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <Button Content="—" Width="28" Height="28" Style="{StaticResource BtnBase}" Padding="0" Click="BtnSlotsMinus_Click" ToolTip="Giảm 1 luồng" />
+                                                    <TextBox x:Name="EntSlots" Text="3" Width="48" Height="28" HorizontalContentAlignment="Center" Margin="4,0" TextChanged="ConfigInput_TextChanged" />
+                                                    <Button Content="+" Width="28" Height="28" Style="{StaticResource BtnBase}" Padding="0" Click="BtnSlotsPlus_Click" ToolTip="Tăng 1 luồng" />
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </Border>
+
+                                        <!-- Hàng 2: Độ Trễ Ngẫu Nhiên Delay -->
+                                        <Border Background="#161920" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,0,0,10">
+                                            <DockPanel>
+                                                <StackPanel VerticalAlignment="Center">
+                                                    <TextBlock Text="Khoảng cách chờ ngẫu nhiên (Random Delay)" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextWhite}" />
+                                                    <TextBlock Text="Thời gian nghỉ ngẫu nhiên giữa 2 lần cmt của mỗi nick (chống spam)" FontSize="11" Foreground="{StaticResource TextDim}" Margin="0,2,0,0" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <TextBox x:Name="EntDelayMin" Text="30" Width="45" Height="28" HorizontalContentAlignment="Center" TextChanged="ConfigInput_TextChanged" />
+                                                    <TextBlock Text="giây  →" Foreground="{StaticResource TextMuted}" VerticalAlignment="Center" Margin="6,0" FontSize="11" />
+                                                    <TextBox x:Name="EntDelayMax" Text="60" Width="45" Height="28" HorizontalContentAlignment="Center" TextChanged="ConfigInput_TextChanged" />
+                                                    <TextBlock Text="giây" Foreground="{StaticResource TextMuted}" VerticalAlignment="Center" Margin="6,0,0,0" FontSize="11" />
+                                                </StackPanel>
+                                            </DockPanel>
+                                        </Border>
+
+                                        <!-- Hàng 3: Giới Hạn Bình Luận Tối Đa -->
+                                        <Border Background="#161920" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,0,0,10">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Grid Grid.Row="0" Margin="0,0,0,8">
+                                                    <StackPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="Giới hạn comment tối đa / Mỗi Token" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextWhite}" />
+                                                        <TextBlock Text="Tự động ngưng sử dụng Token khi đạt đủ số cmt chỉ định" FontSize="11" Foreground="{StaticResource TextDim}" />
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                        <TextBox x:Name="EntMaxCmtToken" Text="50" Width="55" Height="28" HorizontalContentAlignment="Center" TextChanged="ConfigInput_TextChanged" />
+                                                        <TextBlock Text="cmt" Foreground="{StaticResource TextMuted}" VerticalAlignment="Center" Margin="6,0,0,0" FontSize="11" />
+                                                    </StackPanel>
+                                                </Grid>
+                                                <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="0,1,0,0" Padding="0,8,0,0">
+                                                    <Grid>
+                                                        <StackPanel VerticalAlignment="Center">
+                                                            <TextBlock Text="Giới hạn comment tối đa / Mỗi Bài Viết" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextWhite}" />
+                                                            <TextBlock Text="Số lượt bình luận trên 1 bài viết mục tiêu trước khi hoàn thành" FontSize="11" Foreground="{StaticResource TextDim}" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                            <TextBox x:Name="EntMaxCmtPost" Text="1" Width="55" Height="28" HorizontalContentAlignment="Center" TextChanged="ConfigInput_TextChanged" />
+                                                            <TextBlock Text="lượt" Foreground="{StaticResource TextMuted}" VerticalAlignment="Center" Margin="6,0,0,0" FontSize="11" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Hàng 4: Phân Bổ & Khởi Động -->
+                                        <Border Background="#161920" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="6" Padding="12,10">
+                                            <StackPanel>
+                                                <CheckBox x:Name="ChkRoundRobin" Content="Kích hoạt True Round-Robin (Chia đều danh sách bài viết cho các token)" IsChecked="True" Margin="0,0,0,8" />
+                                                <CheckBox x:Name="ChkWarmup" Content="Khởi động Token trước khi chạy (Warmup kiểm tra quyền Graph API)" IsChecked="True" />
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- CỘT 2 (PHẢI): ANTI-BAN, NGHỈ THÔNG MINH & TƯƠNG TÁC -->
+                                <Border Grid.Column="1" Style="{StaticResource CardPanel}" Margin="8,0,0,0">
+                                    <StackPanel>
+                                        <DockPanel Margin="0,0,0,14">
+                                            <TextBlock Text="🛡️ BẢO VỆ TÀI KHOẢN, ANTI-BAN &amp; TƯƠNG TÁC" FontWeight="Bold" FontSize="13" Foreground="{StaticResource SuccessGreen}" VerticalAlignment="Center" />
+                                            <Border Background="#064E3B" CornerRadius="4" Padding="6,2" HorizontalAlignment="Right">
+                                                <TextBlock Text="An Toàn" FontSize="10" FontWeight="Bold" Foreground="#A7F3D0" />
+                                            </Border>
+                                        </DockPanel>
+
+                                        <!-- Hàng 1: Chế Độ Nghỉ Thông Minh Smart Rest -->
+                                        <Border Background="#161920" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,0,0,10">
+                                            <StackPanel>
+                                                <TextBlock Text="Chế độ nghỉ thông minh đường dài (Smart Rest)" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextWhite}" />
+                                                <TextBlock Text="Tự động cho tài khoản nghỉ xả hơi sau một số cmt để xóa cờ quét của Facebook" FontSize="11" Foreground="{StaticResource TextDim}" Margin="0,2,0,8" />
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" /><ColumnDefinition Width="50" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="50" /><ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="Cứ sau " Foreground="{StaticResource TextBody}" VerticalAlignment="Center" FontSize="12" />
+                                                    <TextBox Grid.Column="1" x:Name="EntSmartRestAfter" Text="10" Height="28" HorizontalContentAlignment="Center" Margin="4,0" TextChanged="ConfigInput_TextChanged" />
+                                                    <TextBlock Grid.Column="2" Text="cmt  →  Nghỉ " Foreground="{StaticResource TextBody}" VerticalAlignment="Center" FontSize="12" />
+                                                    <TextBox Grid.Column="3" x:Name="EntSmartRestDuration" Text="60" Height="28" HorizontalContentAlignment="Center" Margin="4,0" TextChanged="ConfigInput_TextChanged" />
+                                                    <TextBlock Grid.Column="4" Text="giây" Foreground="{StaticResource TextBody}" VerticalAlignment="Center" Margin="4,0,0,0" FontSize="12" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Hàng 2: Tự Động Xoay Proxy & Mạng -->
+                                        <Border Background="#161920" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,0,0,10">
+                                            <CheckBox x:Name="ChkAutoRotateProxy" Content="Tự động xoay Proxy / gán lại IP khi phát hiện lỗi mạng" IsChecked="True" />
+                                        </Border>
+
+                                        <!-- Hàng 3: Thả Reaction Cảm Xúc -->
+                                        <Border Background="#161920" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,0,0,10">
+                                            <DockPanel>
+                                                <StackPanel VerticalAlignment="Center">
+                                                    <CheckBox x:Name="ChkSendReactions" Content="Tự động thả Reaction cảm xúc trước khi cmt" Margin="0,0,0,4" />
+                                                    <TextBlock Text="Tăng tương tác tự nhiên, giảm tỷ lệ bị nghi ngờ là bot" FontSize="11" Foreground="{StaticResource TextDim}" />
+                                                </StackPanel>
+                                                <ComboBox x:Name="CboReactionType" Width="115" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <ComboBoxItem Content="👍 LIKE" IsSelected="True" />
+                                                    <ComboBoxItem Content="❤️ LOVE" />
+                                                    <ComboBoxItem Content="🥰 CARE" />
+                                                    <ComboBoxItem Content="😆 HAHA" />
+                                                    <ComboBoxItem Content="😮 WOW" />
+                                                </ComboBox>
+                                            </DockPanel>
+                                        </Border>
+
+                                        <!-- Hàng 4: Bộ Tấm Khiên Anti-Ban Tích Hợp Sẵn -->
+                                        <Border Background="#0B1D19" BorderBrush="#065F46" BorderThickness="1" CornerRadius="6" Padding="10,8" Margin="0,0,0,10">
+                                            <StackPanel>
+                                                <TextBlock Text="🛡️ CƠ CHẾ BẢO VỆ NICK TỰ ĐỘNG ĐANG BẬT:" FontWeight="Bold" FontSize="11" Foreground="{StaticResource SuccessGreen}" Margin="0,0,0,4" />
+                                                <TextBlock Text="• 3-Strike Block: Lỗi nhẹ lần 1-2 chỉ lùi thời gian; Lỗi lần 3 mới khóa, tuyệt đối không chết nick oan." FontSize="11" Foreground="#A7F3D0" TextWrapping="Wrap" Margin="0,0,0,2" />
+                                                <TextBlock Text="• Rate Limit Backoff: Tự động lùi thời gian cấp số nhân (120s → 240s → 600s) khi gặp lỗi 17/341." FontSize="11" Foreground="#6EE7B7" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Hàng 5: Hệ Thống & Bảo Mật DPAPI -->
+                                        <Border Background="#14171E" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="6" Padding="10,8">
+                                            <DockPanel>
+                                                <CheckBox x:Name="ChkAutoUpdateStartup" Content="Tự động kiểm tra cập nhật khi khởi động" IsChecked="True" VerticalAlignment="Center" />
+                                                <TextBlock Text="🔒 DPAPI Encrypted" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextDim}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                            </DockPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </ScrollViewer>
+
+                        <!-- 3. Thanh Nút Thao Tác Dưới Cùng -->
+                        <Border Grid.Row="2" Style="{StaticResource CardPanel}">
+                            <DockPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="💾 Lưu Cấu Hình" Style="{StaticResource BtnPrimary}" MinWidth="130" Height="32" Margin="0,0,8,0" Click="BtnSaveConfig_Click" />
+                                    <Button Content="🔄 Tải Lại Cấu Hình" Style="{StaticResource BtnBase}" MinWidth="130" Height="32" Margin="0,0,8,0" Click="BtnReloadConfig_Click" />
+                                    <Button Content="⚠️ Khôi Phục Mặc Định" Style="{StaticResource BtnDanger}" MinWidth="150" Height="32" Click="BtnResetDefaults_Click" />
+                                </StackPanel>
+                                <TextBlock Text="🔒 Toàn bộ cấu hình và dữ liệu Token được tự động mã hóa bằng Windows DPAPI an toàn tuyệt đối" FontSize="11" Foreground="{StaticResource TextDim}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </DockPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <!-- TRANG 6: 📜 NHẬT KÝ & CHẨN ĐOÁN (ACTIVITY LOGS)              -->
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <Grid x:Name="PageLogs" Visibility="Collapsed">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Log Toolbar -->
+                        <Border Grid.Row="0" Style="{StaticResource CardPanel}" Margin="0,0,0,8">
+                            <DockPanel>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <RadioButton x:Name="RadLogAll" Content="Tất Cả" Style="{StaticResource SubSegmentedPill}" IsChecked="True" Checked="LogFilter_Changed" />
+                                    <RadioButton x:Name="RadLogSuccess" Content="✅ Thành Công" Style="{StaticResource SubSegmentedPill}" Checked="LogFilter_Changed" />
+                                    <RadioButton x:Name="RadLogWarning" Content="⚠️ Cảnh Báo" Style="{StaticResource SubSegmentedPill}" Checked="LogFilter_Changed" />
+                                    <RadioButton x:Name="RadLogError" Content="❌ Lỗi" Style="{StaticResource SubSegmentedPill}" Checked="LogFilter_Changed" />
+
+                                    <TextBox x:Name="EntSearchLogs" Width="150" Height="28" Padding="6,2" Margin="10,0,10,0" ToolTip="Tìm kiếm từ khóa trong log" TextChanged="TxtSearchLogs_TextChanged" />
+                                    <CheckBox x:Name="ChkAutoScroll" Content="📌 Ghim cuộn" IsChecked="True" VerticalAlignment="Center" Margin="0,0,8,0" />
+
+                                    <Button Content="📋 Copy Chọn" Style="{StaticResource BtnBase}" Height="28" Margin="0,0,4,0" Click="BtnCopySelectedLog_Click" />
+                                    <Button Content="📤 Xuất TXT" Style="{StaticResource BtnBase}" Height="28" Margin="0,0,4,0" Click="BtnExportLogs_Click" />
+                                    <Button Content="🗑 Xóa Log" Style="{StaticResource BtnDanger}" Height="28" Click="BtnClearLogs_Click" />
+                                </StackPanel>
+
+                                <TextBlock x:Name="LblLogCounter" Text="Tổng dòng: 0" FontWeight="Bold" FontSize="12" Foreground="{StaticResource PrimaryGold}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </DockPanel>
+                        </Border>
+
+                        <!-- Log Viewer Virtualized ListBox -->
+                        <Border Grid.Row="1" Style="{StaticResource CardPanel}">
+                            <ListBox x:Name="ListLogs" Background="{StaticResource CardBg}" BorderThickness="0"
+                                     VirtualizingStackPanel.IsVirtualizing="True"
+                                     VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="65" />
+                                                <ColumnDefinition Width="70" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{Binding Timestamp}" Foreground="{StaticResource TextDim}" FontFamily="Consolas, Segoe UI" FontSize="11" VerticalAlignment="Center" />
+                                            <Border Grid.Column="1" Background="{Binding BadgeBackground}" BorderBrush="{Binding BadgeBorder}" BorderThickness="1" CornerRadius="4" Padding="4,1" Margin="2,0,6,0" HorizontalAlignment="Center">
+                                                <TextBlock Text="{Binding Level}" Foreground="{Binding ForegroundBrush}" FontWeight="Bold" FontSize="10" />
+                                            </Border>
+                                            <TextBlock Grid.Column="2" Text="{Binding Message}" Foreground="{Binding ForegroundBrush}" FontFamily="Consolas, Segoe UI" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Border>
+                    </Grid>
+
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <!-- TRANG 7: ⚡ GIẤY PHÉP & CẬP NHẬT GITHUB                      -->
+                    <!-- ═══════════════════════════════════════════════════════════ -->
+                    <Grid x:Name="PageLicense" Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Cột Trái: Bản Quyền & Thiết Bị -->
+                        <Border Grid.Column="0" Style="{StaticResource CardPanel}" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="⚡ BẢN QUYỀN &amp; ĐỊNH DANH THIẾT BỊ" FontWeight="Bold" FontSize="14" Foreground="{StaticResource PrimaryGold}" Margin="0,0,0,12" />
+
+                                <TextBlock Text="Mã Hardware ID (HWID máy tính):" FontSize="12" Foreground="{StaticResource TextMuted}" Margin="0,0,0,4" />
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" x:Name="TxtMachineHwid" IsReadOnly="True" Height="32" FontFamily="Consolas, Segoe UI" FontWeight="Bold" Foreground="{StaticResource PrimaryGold}" FontSize="13" />
+                                    <Button Grid.Column="1" Content="📋 Sao Chép HWID" Style="{StaticResource BtnPrimary}" Height="32" Padding="12,2" Margin="6,0,0,0" Click="BtnCopyHwid_Click" />
+                                </Grid>
+
+                                <Border Background="#14171E" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,6">
+                                            <TextBlock Text="Trạng thái bản quyền:" FontSize="12" Foreground="{StaticResource TextBody}" />
+                                            <TextBlock x:Name="LblLicStatusCard" Text="✅ HỢP LỆ (ACTIVE)" FontWeight="Bold" FontSize="12" Foreground="{StaticResource SuccessGreen}" HorizontalAlignment="Right" />
+                                        </Grid>
+                                        <Grid Margin="0,0,0,6">
+                                            <TextBlock Text="Ngày hết hạn:" FontSize="12" Foreground="{StaticResource TextBody}" />
+                                            <TextBlock x:Name="LblLicExpiryCard" Text="2026-11-02 08:31:21" FontWeight="Bold" FontSize="12" Foreground="{StaticResource TextWhite}" HorizontalAlignment="Right" />
+                                        </Grid>
+                                        <Grid>
+                                            <TextBlock Text="Thời gian còn lại:" FontSize="12" Foreground="{StaticResource TextBody}" />
+                                            <TextBlock x:Name="LblLicRemainingCard" Text="⏳ Còn: 4 ngày 13 giờ" FontWeight="Bold" FontSize="12" Foreground="{StaticResource PrimaryGold}" HorizontalAlignment="Right" />
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+
+                                <TextBlock Text="Nhập mã Offline Key kích hoạt:" FontSize="12" Foreground="{StaticResource TextMuted}" Margin="0,0,0,4" />
+                                <Grid Margin="0,0,0,14">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" x:Name="TxtLicenseKeyInput" Height="32" FontFamily="Consolas, Segoe UI" FontSize="12" />
+                                    <Button Grid.Column="1" Content="⚡ Kích Hoạt Ngay" Style="{StaticResource BtnSuccess}" Height="32" Padding="12,2" Margin="6,0,0,0" Click="BtnActivateKey_Click" />
+                                </Grid>
+
+                                <Border Background="#172230" BorderBrush="#1E3A5F" BorderThickness="1" CornerRadius="8" Padding="12">
+                                    <StackPanel>
+                                        <TextBlock Text="✈️ Hỗ Trợ Quản Trị Viên:" FontWeight="Bold" FontSize="12" Foreground="{StaticResource InfoBlue}" Margin="0,0,0,4" />
+                                        <TextBlock Text="Telegram Admin: @abc_abc_05 (Chat ID: 6425719277)" FontSize="12" Foreground="{StaticResource TextWhite}" Margin="0,0,0,8" />
+                                        <Button Content="Mở Kênh Hỗ Trợ Telegram" Style="{StaticResource BtnBase}" Height="28" Click="BtnTelegram_Click" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Cột Phải: Cập Nhật GitHub Releases -->
+                        <Border Grid.Column="1" Style="{StaticResource CardPanel}" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🔄 CẬP NHẬT TỰ ĐỘNG QUA GITHUB" FontWeight="Bold" FontSize="14" Foreground="{StaticResource InfoBlue}" Margin="0,0,0,12" />
+
+                                <Border Background="#14171E" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,12">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,6">
+                                            <TextBlock Text="Phiên bản đang chạy:" FontSize="12" Foreground="{StaticResource TextBody}" />
+                                            <TextBlock Text="v14.0.0 (WPF Win-x64)" FontWeight="Bold" FontSize="12" Foreground="{StaticResource SuccessGreen}" HorizontalAlignment="Right" />
+                                        </Grid>
+                                        <Grid Margin="0,0,0,6">
+                                            <TextBlock Text="Kho lưu trữ phát hành:" FontSize="12" Foreground="{StaticResource TextBody}" />
+                                            <TextBlock x:Name="LblUpdateRepoCard" Text="GiangDev/ToolFB_Release" FontWeight="Bold" FontSize="12" Foreground="{StaticResource TextWhite}" HorizontalAlignment="Right" />
+                                        </Grid>
+                                        <Grid>
+                                            <TextBlock Text="Trạng thái cập nhật:" FontSize="12" Foreground="{StaticResource TextBody}" />
+                                            <TextBlock x:Name="LblUpdateStatusCard" Text="Đã sẵn sàng kiểm tra" FontSize="12" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Right" />
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <Button Content="🔄 Kiểm Tra Cập Nhật Ngay" Style="{StaticResource BtnPrimary}" Height="32" Padding="14,2" Margin="0,0,8,0" Click="BtnCheckUpdate_Click" />
+                                    <Button Content="📂 Mở Thư Mục Ứng Dụng" Style="{StaticResource BtnBase}" Height="32" Padding="12,2" Click="BtnOpenAppDir_Click" />
+                                </StackPanel>
+
+                                <TextBlock Text="Ghi chú phát hành phiên bản mới:" FontSize="12" Foreground="{StaticResource TextMuted}" Margin="0,0,0,4" />
+                                <Border Background="#111317" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="8" Padding="10" Height="170">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <TextBlock x:Name="TxtReleaseNotesCard"
+                                                   Text="Phiên bản v14.0.0 Pro C# .NET 8 (Windows x64)&#x0a;- Redesign toàn diện giao diện Modern Desktop SaaS với Sidebar chuyên nghiệp.&#x0a;- Trang Tổng Quan (Dashboard) thống kê thời gian thực &amp; thao tác nhanh.&#x0a;- Quản lý mục tiêu và nội dung phân cấp rõ ràng, bảng ảo hóa 60 FPS.&#x0a;- Bảo mật Token bằng Windows DPAPI (ProtectedData).&#x0a;- Tự động cập nhật và sao lưu an toàn qua GitHub Releases."
+                                                   FontSize="11" Foreground="{StaticResource TextBody}" TextWrapping="Wrap" />
+                                    </ScrollViewer>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

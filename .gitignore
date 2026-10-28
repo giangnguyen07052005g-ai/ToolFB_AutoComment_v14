@@ -1,0 +1,18 @@
+# Visual Studio & .NET
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+
+# Published folder
+Publish_win-x64/
+*.zip
+
+# Crash and temp logs
+crash_log.txt
+*.log

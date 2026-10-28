@@ -1,0 +1,11 @@
+{
+  "GitHubOwner": "giangnguyen07052005g-ai",
+  "GitHubRepo": "ToolFB_AutoComment_v14",
+  "CurrentVersion": "14.0.0",
+  "UseGitHubReleasesApi": true,
+  "ManifestUrl": "https://raw.githubusercontent.com/giangnguyen07052005g-ai/ToolFB_AutoComment_v14/main/latest.json",
+  "AutoCheckOnStartup": true,
+  "AutoDownload": false,
+  "SkipVersion": null,
+  "LastChecked": null
+}

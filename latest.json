@@ -1,0 +1,10 @@
+﻿{
+  "version": "14.1.0",
+  "downloadUrl": "https://github.com/giangdev/ToolFB_Releases/releases/download/v14.1.0/ToolFB_v14.1.0_Update.zip",
+  "sha256": "5a8df9d4a90fdb9ff127899e704d9bb415d31f5c1e6d5323f06374e4935b0493",
+  "signature": "FeLjV2HOD6B/XyIzTOlBv44Ak8kiJBKQt9dCbNkCJqRZvbjYv9H0wi7HIQJJ8Obty6iKdss7urG2JjLJyLitnA==",
+  "releaseNotes": "B\u1EA3n n\u00E2ng c\u1EA5p C# .NET 8 si\u00EAu m\u01B0\u1EE3t: T\u0103ng t\u1ED1c \u0111\u1ED9 render UI 60 FPS, \u0111a lu\u1ED3ng th\u1EF1c th\u1EE5, t\u1ED1i \u01B0u thu\u1EADt to\u00E1n Round-Robin v\u00E0 ch\u1ED1ng c\u1EAFm c\u1EDD checkpoint Facebook.",
+  "minimumVersion": null,
+  "mandatory": false,
+  "publishedAt": "2026-10-28T10:42:45.2194554Z"
+}
