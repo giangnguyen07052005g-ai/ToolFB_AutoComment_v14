@@ -1,10 +1,10 @@
 ﻿{
   "version": "14.1.0",
   "downloadUrl": "https://github.com/giangnguyen07052005g-ai/ToolFB_AutoComment_v14/releases/download/v14.1.0/ToolFB_v14.1.0.zip",
-  "sha256": "f06107ed487508d062debdec87a530a0cb9a055994eafd2c39d7a192c20384b2",
-  "signature": "Iwn5YMz3d6PLSCrjVwogKSD6wNTDDnk5rA4A1mZ3JFCEHswCkc069rjmNwuoAbmpQugRaM2qm6qQPweMANq9nw==",
+  "sha256": "8298630bcb84cfe3604c01caafa63df13b0fbba510a6b85cf112f6e6ea193778",
+  "signature": "NWylBBwv/TOAX\u002BSNHFOIEejyReANWIlOTbvLf/ne9/vZV7J4pCB4\u002BW\u002BhX82x\u002B0iEKYxHZ1H1x38r0DT1pIW4rQ==",
   "releaseNotes": "## \u00F0\u0178\u017D\u2030 B\u00E1\u00BA\u00A2N C\u00E1\u00BA\u00ACP NH\u00E1\u00BA\u00ACT TH\u00E1\u00BB\u00AC NGHI\u00E1\u00BB\u2020M T\u00E1\u00BB\u00B0 \u00C4\u0090\u00E1\u00BB\u02DCNG v14.1.0 (DEMO RELEASE)\n\n- \u00E2\u0153\u2026 Th\u00E1\u00BB\u00AD nghi\u00E1\u00BB\u2021m th\u00C3\u00A0nh c\u00C3\u00B4ng c\u00C6\u00A1 ch\u00E1\u00BA\u00BF Auto-Update b\u00E1\u00BA\u00A3o m\u00E1\u00BA\u00ADt qua GitHub Releases API.\n- \u00F0\u0178\u203A\u00A1\u00EF\u00B8\u008F X\u00C3\u00A1c th\u00E1\u00BB\u00B1c ch\u00E1\u00BB\u00AF k\u00C3\u00BD s\u00E1\u00BB\u2018 m\u00E1\u00BA\u00ADt m\u00C3\u00A3 h\u00E1\u00BB\u008Dc ECDSA NIST P-256 \u0026 SHA-256 ch\u00E1\u00BB\u2018ng gi\u00E1\u00BA\u00A3 m\u00E1\u00BA\u00A1o.\n- \u00E2\u0161\u00A1 N\u00C3\u00A2ng c\u00E1\u00BA\u00A5p giao di\u00E1\u00BB\u2021n SaaS Modern 2 c\u00E1\u00BB\u2122t c\u00C3\u00A2n \u00C4\u2018\u00E1\u00BB\u2018i, t\u00E1\u00BB\u2018i \u00C6\u00B0u ki\u00E1\u00BB\u0192m so\u00C3\u00A1t \u00C4\u2018a lu\u00E1\u00BB\u201Cng.\n- \u00E2\u008F\u00B3 \u00C4\u0090\u00E1\u00BB\u201Cng h\u00E1\u00BB\u201C \u00C4\u2018\u00E1\u00BA\u00BFm ng\u00C6\u00B0\u00E1\u00BB\u00A3c b\u00E1\u00BA\u00A3n quy\u00E1\u00BB\u0081n th\u00E1\u00BB\u009Di gian th\u00E1\u00BB\u00B1c t\u00E1\u00BB\u00ABng gi\u00C3\u00A2y (Live Countdown).\n- \u00E2\u0161\u2122\u00EF\u00B8\u008F T\u00C3\u00ADch h\u00E1\u00BB\u00A3p Profiles 1-click: An To\u00C3\u00A0n Cao, T\u00C4\u0192ng T\u00E1\u00BB\u2018c Turbo, Nu\u00C3\u00B4i Nick Si\u00C3\u00AAu Ch\u00E1\u00BA\u00ADm.\r\n",
   "minimumVersion": null,
   "mandatory": false,
-  "publishedAt": "2026-10-28T14:21:13.860086Z"
+  "publishedAt": "2026-10-28T14:22:08.7497481Z"
 }
