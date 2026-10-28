@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -263,7 +263,6 @@ public partial class MainWindow : Window
         PageSettings.Visibility = NavSettings.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
         PageLogs.Visibility = NavLogs.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
         PageLicense.Visibility = NavLicense.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
-        if (PageDemo != null && NavDemo != null) PageDemo.Visibility = NavDemo.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
 
         if (NavDashboard.IsChecked == true)
         {
@@ -294,11 +293,6 @@ public partial class MainWindow : Window
         {
             LblPageTitle.Text = "📜 Nhật Ký Hoạt Động & Chẩn Đoán";
             LblPageSubtitle.Text = "Ghi log thời gian thực 60 FPS, bộ lọc cấp độ (Success/Warn/Error), tìm kiếm và xuất TXT";
-        }
-        else if (NavDemo?.IsChecked == true)
-        {
-            LblPageTitle.Text = "Tab Demo Cap Nhat Auto-Update";
-            LblPageSubtitle.Text = "Tab nay duoc cap nhat tu dong tu GitHub Releases thanh cong 100%!";
         }
         else if (NavLicense.IsChecked == true)
         {
@@ -1748,12 +1742,5 @@ public partial class MainWindow : Window
             });
         }
         catch { }
-    }
-    private int _demoClickCount = 0;
-    private void BtnTestDemoInteraction_Click(object sender, RoutedEventArgs e)
-    {
-        _demoClickCount++;
-        TxtDemoInteractionResult.Text = $"âœ… Thá»­ nghiá»‡m tÆ°Æ¡ng tÃ¡c thÃ nh cÃ´ng láº§n #{_demoClickCount} lÃºc {DateTime.Now:HH:mm:ss}!\nTab Demo má»›i hoáº¡t Ä‘á»™ng mÆ°á»£t mÃ  60 FPS, há»‡ thá»‘ng Auto-Update hoÃ n toÃ n thÃ nh cÃ´ng.";
-        TxtDemoInteractionResult.Foreground = (System.Windows.Media.Brush)FindResource("SuccessGreen");
     }
 }
