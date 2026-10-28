@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 
@@ -154,6 +154,21 @@ internal class Program
                     string? destDir = Path.GetDirectoryName(destinationPath);
                     if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
                         Directory.CreateDirectory(destDir);
+
+                    // Neu la tep cua Updater, thu cap nhat nhe nhang; neu tep dang bi khoa thi bo qua khong rollback app chinh
+                    if (entry.Name.StartsWith("ToolFB.Updater", StringComparison.OrdinalIgnoreCase))
+                    {
+                        try
+                        {
+                            ExtractEntryWithRetry(entry, destinationPath, maxRetries: 2, delayMs: 100);
+                            Log("[+] Da cap nhat file: " + entry.FullName);
+                        }
+                        catch (Exception uEx)
+                        {
+                            Log("[*] Bo qua ghi de tep Updater dang chay: " + entry.Name + " (" + uEx.Message + ")");
+                        }
+                        continue;
+                    }
 
                     ExtractEntryWithRetry(entry, destinationPath);
                     Log($"[+] Đã cập nhật file: {entry.FullName}");

@@ -11,6 +11,8 @@ obj/
 
 # Published folder
 Publish_win-x64/
+Publish_Staging/
+Release_Packages/
 *.zip
 
 # Crash and temp logs

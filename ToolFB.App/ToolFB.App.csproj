@@ -6,9 +6,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <Version>14.1.0</Version>
-    <AssemblyVersion>14.1.0.0</AssemblyVersion>
-    <FileVersion>14.1.0.0</FileVersion>
+    <Version>14.1.1</Version>
+    <AssemblyVersion>14.1.1.0</AssemblyVersion>
+    <FileVersion>14.1.1.0</FileVersion>
     <Product>GIANG DEV Bình Luận Facebook Pro</Product>
     <Description>Phần Mềm Tự Động Bình Luận &amp; Nuôi Tương Tác Facebook Pro v14 - GIANG DEV</Description>
     <Company>GIANG DEV</Company>
