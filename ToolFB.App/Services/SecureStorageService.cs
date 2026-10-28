@@ -43,6 +43,11 @@ public static class SecureStorageService
                 SmartRestAfter = config.SmartRestAfter,
                 SmartRestDuration = config.SmartRestDuration,
                 SelectedImagePath = config.SelectedImagePath,
+                AutoRotate = config.AutoRotate,
+                AutoSaveCommentLinks = config.AutoSaveCommentLinks,
+                CommentLinksFilePath = config.CommentLinksFilePath,
+                AutoSaveCommentedPosts = config.AutoSaveCommentedPosts,
+                AutoExportCsvReport = config.AutoExportCsvReport,
                 TargetUrls = config.TargetUrls
                 // Exclude RawAccountLines from plaintext json
             };

@@ -53,14 +53,21 @@ public class FacebookGraphService
 
     public static string MakeFullCommentLink(string targetId, string cmtId)
     {
+        if (string.IsNullOrWhiteSpace(cmtId)) return string.Empty;
+
         if (cmtId.Contains('_'))
         {
             var parts = cmtId.Split('_');
-            return parts.Length == 2
-                ? $"https://www.facebook.com/{parts[0]}?comment_id={parts[1]}"
-                : $"https://www.facebook.com/{parts[0]}_{parts[1]}?comment_id={parts[^1]}";
+            if (parts.Length >= 3)
+            {
+                return $"https://www.facebook.com/{parts[0]}_{parts[1]}?comment_id={parts[^1]}";
+            }
+            if (parts.Length == 2)
+            {
+                return $"https://www.facebook.com/{parts[0]}?comment_id={parts[1]}";
+            }
         }
-        if (targetId.Contains('_'))
+        if (!string.IsNullOrWhiteSpace(targetId))
         {
             return $"https://www.facebook.com/{targetId}?comment_id={cmtId.Split('_')[^1]}";
         }

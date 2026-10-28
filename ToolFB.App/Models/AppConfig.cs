@@ -22,6 +22,12 @@ public class AppConfig
     public string SelectedImagePath { get; set; } = string.Empty;
     public bool AutoRotate { get; set; } = true;
 
+    // Xuất dữ liệu & Tự động lưu link đã cmt
+    public bool AutoSaveCommentLinks { get; set; } = true;
+    public string CommentLinksFilePath { get; set; } = "comment_links.txt";
+    public bool AutoSaveCommentedPosts { get; set; } = true;
+    public bool AutoExportCsvReport { get; set; } = true;
+
     // Target posts
     public List<string> TargetUrls { get; set; } = new();
 

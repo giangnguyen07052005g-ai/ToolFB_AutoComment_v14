@@ -25,6 +25,7 @@ public class CommentWorkerEngine
 
     public int TotalSuccess { get; private set; }
     public int TotalFail { get; private set; }
+    public int TotalSavedLinks { get; private set; }
 
     public event EventHandler<LogEventArgs>? LogReceived;
     public event EventHandler? StatsChanged;
@@ -314,11 +315,26 @@ public class CommentWorkerEngine
                             }
 
                             string fullLink = FacebookGraphService.MakeFullCommentLink(tid, cmtIdOrError);
-                            SaveLinkToTxt(fullLink);
-                            SaveCommentedPost(tid);
-                            RecordToCsv(tid, cur.Token, cur.Name, fullLink, "Thành công");
+                            if (config.AutoSaveCommentLinks)
+                            {
+                                SaveLinkToTxt(fullLink, config.CommentLinksFilePath);
+                                TotalSavedLinks++;
+                            }
+                            if (config.AutoSaveCommentedPosts)
+                            {
+                                SaveCommentedPost(tid);
+                            }
+                            if (config.AutoExportCsvReport)
+                            {
+                                RecordToCsv(tid, cur.Token, cur.Name, fullLink, "Thành công");
+                            }
 
-                            EmitLog($"[{cur.Name}] → CMT thành công bài {tid} (IP Thật: {cur.RealExitIp})", "success");
+                            EmitLog($"[{cur.Name}] → CMT thành công bài {tid} (IP Thật: {cur.RealExitIp}) | Link: {fullLink}", "success");
+                            if (config.AutoSaveCommentLinks)
+                            {
+                                string outName = Path.GetFileName(string.IsNullOrWhiteSpace(config.CommentLinksFilePath) ? "comment_links.txt" : config.CommentLinksFilePath);
+                                EmitLog($"💾 Đã tự động lưu link cmt vào file {outName} (Tổng đã lưu: {TotalSavedLinks} link)", "info");
+                            }
                         }
                         else
                         {
@@ -465,43 +481,75 @@ public class CommentWorkerEngine
         }
     }
 
-    private static void SaveLinkToTxt(string link)
-    {
-        try
-        {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "comment_links.txt");
-            File.AppendAllText(path, $"{link}\n", Encoding.UTF8);
-        }
-        catch { }
-    }
+    private static readonly object _fileLock = new();
 
-    private static void SaveCommentedPost(string postId)
+    public static void SaveLinkToTxt(string link, string? customPath = null)
     {
-        try
+        if (string.IsNullOrWhiteSpace(link)) return;
+        lock (_fileLock)
         {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "commented_posts.txt");
-            File.AppendAllText(path, $"{postId}\n", Encoding.UTF8);
-        }
-        catch { }
-    }
-
-    private static void RecordToCsv(string targetId, string token, string name, string link, string status)
-    {
-        try
-        {
-            var filename = $"report_comment_{DateTime.Now:yyyy_MM_dd}.csv";
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
-            bool needHeader = !File.Exists(path);
-
-            using var sw = new StreamWriter(path, true, Encoding.UTF8);
-            if (needHeader)
+            try
             {
-                sw.WriteLine("Thời Gian,Target ID,Token,Tên Tài Khoản,Link Comment,Trạng Thái");
+                var filename = string.IsNullOrWhiteSpace(customPath) ? "comment_links.txt" : customPath.Trim();
+                var path = Path.IsPathRooted(filename)
+                    ? filename
+                    : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
+
+                var dir = Path.GetDirectoryName(path);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                File.AppendAllText(path, $"{link.Trim()}{Environment.NewLine}", Encoding.UTF8);
             }
-            string timeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            string safeToken = token.Length > 8 ? $"{token[..4]}...{token[^4..]}" : token;
-            sw.WriteLine($"\"{timeStr}\",\"{targetId}\",\"{safeToken}\",\"{name}\",\"{link}\",\"{status.Replace("\"", "\"\"")}\"");
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[SaveLinkToTxt] Error: {ex.Message}");
+            }
         }
-        catch { }
+    }
+
+    public static void SaveCommentedPost(string postId)
+    {
+        if (string.IsNullOrWhiteSpace(postId)) return;
+        lock (_fileLock)
+        {
+            try
+            {
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "commented_posts.txt");
+                File.AppendAllText(path, $"{postId.Trim()}{Environment.NewLine}", Encoding.UTF8);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[SaveCommentedPost] Error: {ex.Message}");
+            }
+        }
+    }
+
+    public static void RecordToCsv(string targetId, string token, string name, string link, string status)
+    {
+        lock (_fileLock)
+        {
+            try
+            {
+                var filename = $"report_comment_{DateTime.Now:yyyy_MM_dd}.csv";
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
+                bool needHeader = !File.Exists(path);
+
+                using var sw = new StreamWriter(path, true, Encoding.UTF8);
+                if (needHeader)
+                {
+                    sw.WriteLine("Thời Gian,Target ID,Token,Tên Tài Khoản,Link Comment,Trạng Thái");
+                }
+                string timeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                string safeToken = token.Length > 8 ? $"{token[..4]}...{token[^4..]}" : token;
+                sw.WriteLine($"\"{timeStr}\",\"{targetId}\",\"{safeToken}\",\"{name}\",\"{link}\",\"{status.Replace("\"", "\"\"")}\"");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[RecordToCsv] Error: {ex.Message}");
+            }
+        }
     }
 }

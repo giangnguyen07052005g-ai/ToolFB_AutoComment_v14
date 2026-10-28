@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Text;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -1700,6 +1701,118 @@ public partial class MainWindow : Window
                 BtnTopStop.IsEnabled = false;
                 OnEngineStatsChanged(this, EventArgs.Empty);
             }
+        }
+    }
+    #endregion
+
+
+    #region Comment Links TXT & File Management
+    private string GetEffectiveCommentLinksPath()
+    {
+        string filename = "comment_links.txt";
+        if (TxtCommentLinksPath != null && !string.IsNullOrWhiteSpace(TxtCommentLinksPath.Text))
+        {
+            filename = TxtCommentLinksPath.Text.Trim();
+        }
+        return Path.IsPathRooted(filename)
+            ? filename
+            : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
+    }
+
+    private void UpdateSavedLinksCounter()
+    {
+        try
+        {
+            string path = GetEffectiveCommentLinksPath();
+            int count = 0;
+            if (File.Exists(path))
+            {
+                count = File.ReadLines(path).Count(l => !string.IsNullOrWhiteSpace(l));
+            }
+            if (LblSavedLinksBadge != null)
+            {
+                LblSavedLinksBadge.Text = $"{count} link đã lưu";
+            }
+            if (DashSavedLinks != null)
+            {
+                DashSavedLinks.Text = $" • 🔗 {count} link txt";
+            }
+        }
+        catch { }
+    }
+
+    private void BtnOpenCommentLinks_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            string filePath = GetEffectiveCommentLinksPath();
+            string? dir = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+            if (!File.Exists(filePath))
+            {
+                File.WriteAllText(filePath, "", Encoding.UTF8);
+            }
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = filePath,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Không thể mở file link đã cmt:\n{ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void BtnOpenCommentLinksFolder_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            string filePath = GetEffectiveCommentLinksPath();
+            string? folder = Path.GetDirectoryName(filePath);
+            if (string.IsNullOrEmpty(folder) || !Directory.Exists(folder))
+            {
+                folder = AppDomain.CurrentDomain.BaseDirectory;
+            }
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = folder,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Không thể mở thư mục:\n{ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void BtnBrowseCommentLinks_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var sfd = new Microsoft.Win32.SaveFileDialog
+            {
+                Title = "Chọn file lưu danh sách link đã bình luận",
+                Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*",
+                FileName = "comment_links.txt",
+                InitialDirectory = AppDomain.CurrentDomain.BaseDirectory
+            };
+            if (sfd.ShowDialog() == true)
+            {
+                if (TxtCommentLinksPath != null)
+                    TxtCommentLinksPath.Text = sfd.FileName;
+                SaveCurrentSettings();
+                UpdateSavedLinksCounter();
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Lỗi chọn file: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
     #endregion

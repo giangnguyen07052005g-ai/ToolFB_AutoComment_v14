@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Security.Cryptography;
@@ -207,6 +207,31 @@ internal class Program
         var checkRes = checkTask.Result;
         bool liveUpdateOk = checkRes.HasUpdate && checkRes.LatestVersion == "14.1.0" && checkRes.Manifest != null;
         AssertTest("15. Kết nối & nhận diện bản cập nhật thực tế từ GitHub Releases (v14.1.0)", liveUpdateOk);
+
+        // Test 16: Tự động lưu link đã cmt vào TXT đa luồng an toàn
+        string testCommentLinksPath = Path.Combine(Path.GetTempPath(), $"test_comment_links_{Guid.NewGuid():N}.txt");
+        try
+        {
+            // Test 16.1: Trích xuất Full Comment Link chuẩn Facebook
+            string link1 = FacebookGraphService.MakeFullCommentLink("176762146363925_1698707775587690", "176762146363925_1698707775587690_1635075384942562");
+            string link2 = FacebookGraphService.MakeFullCommentLink("987654321", "123456789");
+            bool linkOk = link1.Contains("comment_id=1635075384942562") && link2.Contains("comment_id=123456789");
+            AssertTest("16.1 Tạo link cmt Facebook chuẩn xác từ Target ID và Comment ID", linkOk);
+
+            // Test 16.2: Ghi file đồng thời từ 20 luồng ngầm không bị deadlock hay lock exception
+            var parallelTasks = Enumerable.Range(1, 20).Select(i => Task.Run(() =>
+            {
+                CommentWorkerEngine.SaveLinkToTxt($"https://www.facebook.com/post_test_{i}?comment_id=cmt_{i}", testCommentLinksPath);
+            })).ToArray();
+            Task.WaitAll(parallelTasks);
+
+            var savedLines = File.ReadAllLines(testCommentLinksPath).Where(l => !string.IsNullOrWhiteSpace(l)).ToList();
+            AssertTest("16.2 Ghi đồng thời 20 luồng vào file TXT comment_links.txt an toàn 100%", savedLines.Count == 20);
+        }
+        finally
+        {
+            if (File.Exists(testCommentLinksPath)) File.Delete(testCommentLinksPath);
+        }
 
         // Test 14: Sinh ảnh chụp màn hình Modern Dashboard trực tiếp từ WPF Visual Tree
         string screenshotPath = @"C:\Users\GiangCuti\.gemini\antigravity\brain\53c036d9-2917-4d87-8a61-2b43ad7240da\modern_dashboard_screenshot.png";
