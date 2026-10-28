@@ -100,11 +100,13 @@ public partial class UpdateDialog : Window
                 return;
             }
 
-            TxtStatus.Text = "Đang khởi động trình cập nhật...";
-            TxtProgressStatus.Text = "Đang áp dụng bản cập nhật...";
-            await Task.Delay(800);
+            TxtStatus.Text = "Đang tự động cài đặt bản cập nhật...";
+            TxtProgressStatus.Text = "Đang áp dụng phiên bản mới và khởi động lại...";
+            ProgressBarDownload.IsIndeterminate = true;
+            BtnCancel.Visibility = Visibility.Collapsed;
+            await Task.Delay(600);
 
-            // Launch Updater.exe and shutdown
+            // Launch Updater.exe silently and shutdown
             UpdateService.ApplyUpdateAndRestart(filePath);
         }
         catch (OperationCanceledException)

@@ -198,6 +198,16 @@ internal class Program
         }
         catch { }
 
+        // Test 15: Kiểm tra kết nối Auto-Update thực tế từ GitHub Releases
+        var liveSettings = UpdateSettings.Load();
+        liveSettings.CurrentVersion = "14.0.0";
+        var liveUpdater = new UpdateService();
+        var checkTask = liveUpdater.CheckForUpdateAsync(liveSettings);
+        checkTask.Wait();
+        var checkRes = checkTask.Result;
+        bool liveUpdateOk = checkRes.HasUpdate && checkRes.LatestVersion == "14.1.0" && checkRes.Manifest != null;
+        AssertTest("15. Kết nối & nhận diện bản cập nhật thực tế từ GitHub Releases (v14.1.0)", liveUpdateOk);
+
         // Test 14: Sinh ảnh chụp màn hình Modern Dashboard trực tiếp từ WPF Visual Tree
         string screenshotPath = @"C:\Users\GiangCuti\.gemini\antigravity\brain\53c036d9-2917-4d87-8a61-2b43ad7240da\modern_dashboard_screenshot.png";
         CaptureUiScreenshot(screenshotPath);

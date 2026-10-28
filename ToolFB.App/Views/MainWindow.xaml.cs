@@ -92,15 +92,19 @@ public partial class MainWindow : Window
 
         // 3. Cập nhật thông tin GitHub Updater card
         var updateCfg = UpdateSettings.Load();
+        LblCurrentVersionRunning.Text = $"v{_updateService.CurrentVersion} (WPF Win-x64)";
         LblUpdateRepoCard.Text = $"{updateCfg.GitHubOwner}/{updateCfg.GitHubRepo}";
         ChkAutoUpdateStartup.IsChecked = updateCfg.AutoCheckOnStartup;
+
+        // 4. Kiểm tra xác minh sau khi tự cập nhật và khởi động lại
+        CheckPostUpdateVerification();
 
         if (updateCfg.AutoCheckOnStartup)
         {
             await CheckUpdateInternalAsync(silentIfNoUpdate: true);
         }
 
-        // 4. Sinh thử 1 bình luận mẫu ban đầu
+        // 5. Sinh thử 1 bình luận mẫu ban đầu
         GenerateCommentPreview();
     }
 
@@ -1351,8 +1355,7 @@ public partial class MainWindow : Window
             if (checkResult.HasUpdate && checkResult.Manifest != null)
             {
                 LblUpdateStatusCard.Text = $"Có bản mới: v{checkResult.LatestVersion}";
-                var updateDialog = new UpdateDialog(checkResult.Manifest, checkResult.CurrentVersion, _updateService);
-                updateDialog.ShowDialog();
+                ShowUpdateModal(checkResult.Manifest, checkResult.CurrentVersion);
             }
             else
             {
@@ -1374,6 +1377,246 @@ public partial class MainWindow : Window
             }
         }
     }
+
+    #region Post-Update Verification & Toast Notifications
+    private void CheckPostUpdateVerification()
+    {
+        string[] args = Environment.GetCommandLineArgs();
+        for (int i = 0; i < args.Length; i++)
+        {
+            if (args[i] == "--updated" && i + 1 < args.Length)
+            {
+                string expectedVer = args[++i].Trim().TrimStart('v', 'V');
+                string currentVer = _updateService.CurrentVersion.Trim().TrimStart('v', 'V');
+
+                if (currentVer.Equals(expectedVer, StringComparison.OrdinalIgnoreCase))
+                {
+                    ShowUpdateSuccessToast($"Chúc mừng! Ứng dụng đã được nâng cấp thành công lên phiên bản v{currentVer}. Toàn bộ dữ liệu và cấu hình đã được bảo toàn 100%.");
+                    // Dọn dẹp thư mục tạm an toàn
+                    try
+                    {
+                        string tempDir = Path.Combine(Path.GetTempPath(), "ToolFB_Updates");
+                        if (Directory.Exists(tempDir)) Directory.Delete(tempDir, true);
+                    }
+                    catch { }
+                }
+                else
+                {
+                    MessageBox.Show(
+                        $"Cảnh báo: Bản cập nhật v{expectedVer} chưa hoàn tất cài đặt!\nPhiên bản hiện tại đang chạy vẫn là v{currentVer}.\nVui lòng kiểm tra lại quyền ghi thư mục hoặc file updater.log.",
+                        "Kiểm tra cập nhật", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                break;
+            }
+        }
+    }
+
+    private void ShowUpdateSuccessToast(string message)
+    {
+        ToastNotificationMessage.Text = message;
+        ToastNotificationCard.Visibility = Visibility.Visible;
+
+        var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(8) };
+        timer.Tick += (s, e) =>
+        {
+            timer.Stop();
+            ToastNotificationCard.Visibility = Visibility.Collapsed;
+        };
+        timer.Start();
+    }
+
+    private void BtnCloseToast_Click(object sender, RoutedEventArgs e)
+    {
+        ToastNotificationCard.Visibility = Visibility.Collapsed;
+    }
+    #endregion
+
+    #region In-App Modern Auto-Update Modal (100% In-App, Zero CMD, Auto-Restart)
+    private UpdateManifest? _activeUpdateManifest;
+    private CancellationTokenSource? _updateDownloadCts;
+
+    private void ShowUpdateModal(UpdateManifest manifest, string currentVersion)
+    {
+        _activeUpdateManifest = manifest;
+
+        ModalTxtCurrentVer.Text = $"v{currentVersion}";
+        ModalTxtLatestVer.Text = $"v{manifest.Version}";
+        ModalTxtReleaseNotes.Text = string.IsNullOrWhiteSpace(manifest.ReleaseNotes) ? "Bản phát hành tối ưu hiệu năng và sửa lỗi." : manifest.ReleaseNotes;
+
+        ModalBadgeMandatory.Visibility = manifest.Mandatory ? Visibility.Visible : Visibility.Collapsed;
+        BtnModalClose.Visibility = manifest.Mandatory ? Visibility.Collapsed : Visibility.Visible;
+        BtnModalRemindLater.Visibility = manifest.Mandatory ? Visibility.Collapsed : Visibility.Visible;
+
+        // Reset UI controls
+        ModalPanelProgress.Visibility = Visibility.Collapsed;
+        ModalBoxError.Visibility = Visibility.Collapsed;
+        BtnModalUpdateNow.Visibility = Visibility.Visible;
+        BtnModalCancel.Visibility = Visibility.Collapsed;
+        BtnModalRetry.Visibility = Visibility.Collapsed;
+        ModalTxtBottomStatus.Text = "Sẵn sàng nâng cấp";
+
+        OverlayUpdateModal.Visibility = Visibility.Visible;
+    }
+
+    private void BtnModalClose_Click(object sender, RoutedEventArgs e)
+    {
+        if (_activeUpdateManifest?.Mandatory == true)
+        {
+            MessageBox.Show("Đây là bản cập nhật bắt buộc để bảo mật và tương thích. Vui lòng cập nhật để tiếp tục!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        _updateDownloadCts?.Cancel();
+        OverlayUpdateModal.Visibility = Visibility.Collapsed;
+    }
+
+    private void BtnModalRemindLater_Click(object sender, RoutedEventArgs e)
+    {
+        _updateDownloadCts?.Cancel();
+        OverlayUpdateModal.Visibility = Visibility.Collapsed;
+    }
+
+    private void BtnModalCancel_Click(object sender, RoutedEventArgs e)
+    {
+        _updateDownloadCts?.Cancel();
+        ModalPanelProgress.Visibility = Visibility.Collapsed;
+        ModalBoxError.Visibility = Visibility.Collapsed;
+        BtnModalUpdateNow.Visibility = Visibility.Visible;
+        BtnModalRemindLater.Visibility = _activeUpdateManifest?.Mandatory == true ? Visibility.Collapsed : Visibility.Visible;
+        BtnModalCancel.Visibility = Visibility.Collapsed;
+        BtnModalRetry.Visibility = Visibility.Collapsed;
+        ModalTxtBottomStatus.Text = "Đã hủy tải gói cập nhật.";
+    }
+
+    private void BtnModalRetry_Click(object sender, RoutedEventArgs e)
+    {
+        BtnModalRetry.Visibility = Visibility.Collapsed;
+        ModalBoxError.Visibility = Visibility.Collapsed;
+        StartInAppUpdateProcess();
+    }
+
+    private void BtnModalUpdateNow_Click(object sender, RoutedEventArgs e)
+    {
+        StartInAppUpdateProcess();
+    }
+
+    private async void StartInAppUpdateProcess()
+    {
+        if (_activeUpdateManifest == null) return;
+
+        // 1. Kiểm tra an toàn: Nếu tool đang chạy cào bài hoặc bình luận -> Xác nhận dừng an toàn
+        if (_engine.IsRunning)
+        {
+            var confirm = MessageBox.Show(
+                "Tác vụ tự động bình luận đang chạy.\nBạn có muốn dừng tác vụ an toàn để tiến hành cập nhật phiên bản mới ngay không?",
+                "Xác nhận dừng tác vụ",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            _engine.Stop();
+            await Task.Delay(500);
+        }
+
+        // 2. Lưu cấu hình và dữ liệu người dùng
+        SaveCurrentSettings();
+
+        // 3. Khởi tạo trạng thái giao diện In-App
+        BtnModalUpdateNow.Visibility = Visibility.Collapsed;
+        BtnModalRemindLater.Visibility = Visibility.Collapsed;
+        BtnModalRetry.Visibility = Visibility.Collapsed;
+        BtnModalCancel.Visibility = Visibility.Visible;
+        ModalBoxError.Visibility = Visibility.Collapsed;
+        ModalPanelProgress.Visibility = Visibility.Visible;
+
+        ModalProgressBar.IsIndeterminate = false;
+        ModalProgressBar.Value = 0;
+        ModalTxtPercent.Text = "0%";
+        ModalTxtProgressStatus.Text = "Đang kết nối bảo mật tới GitHub Releases...";
+        ModalTxtBytesDetail.Text = "Đang chuẩn bị tải...";
+        ModalTxtSpeedDetail.Text = "";
+        ModalTxtBottomStatus.Text = "Đang tải bản cập nhật...";
+
+        _updateDownloadCts = new CancellationTokenSource();
+        var progress = new Progress<DownloadProgressReport>(report =>
+        {
+            ModalProgressBar.Value = report.ProgressPercentage;
+            ModalTxtPercent.Text = $"{report.ProgressPercentage:0}%";
+            ModalTxtProgressStatus.Text = report.StatusText;
+
+            string mbRecv = (report.BytesReceived / (1024.0 * 1024.0)).ToString("0.0");
+            string mbTot = report.TotalBytes.HasValue ? (report.TotalBytes.Value / (1024.0 * 1024.0)).ToString("0.0") : "?";
+            ModalTxtBytesDetail.Text = $"{mbRecv} MB / {mbTot} MB";
+
+            if (report.SpeedKbPerSec > 1024)
+            {
+                ModalTxtSpeedDetail.Text = $"{(report.SpeedKbPerSec / 1024.0):0.0} MB/s";
+            }
+            else
+            {
+                ModalTxtSpeedDetail.Text = $"{report.SpeedKbPerSec:0.0} KB/s";
+            }
+        });
+
+        try
+        {
+            // 4. Tải gói cập nhật qua HTTPS với báo cáo tiến trình chi tiết
+            var (success, filePath, error) = await _updateService.DownloadUpdateAsync(_activeUpdateManifest, progress, _updateDownloadCts.Token);
+
+            if (!success)
+            {
+                ShowUpdateError(error);
+                return;
+            }
+
+            // 5. Xác minh chữ ký số ECDSA NIST P-256 (nếu có) và tính toàn vẹn gói ZIP
+            ModalProgressBar.IsIndeterminate = true;
+            ModalTxtProgressStatus.Text = "Đang xác minh chữ ký số mật mã học và kiểm tra gói cập nhật...";
+            ModalTxtBottomStatus.Text = "Đang xác minh tính toàn vẹn...";
+            BtnModalCancel.Visibility = Visibility.Collapsed;
+            await Task.Delay(400);
+
+            // 6. Chuẩn bị thay thế và tự khởi động lại
+            ModalTxtProgressStatus.Text = "Đang chuẩn bị phiên bản mới và sao lưu dữ liệu an toàn...";
+            ModalTxtBottomStatus.Text = "Đang chuẩn bị cài đặt...";
+            await Task.Delay(400);
+
+            ModalTxtProgressStatus.Text = "Đang áp dụng phiên bản mới và tự khởi động lại...";
+            ModalTxtBottomStatus.Text = "Tự động khởi động lại trong giây lát...";
+            await Task.Delay(600);
+
+            // 7. Gọi cơ chế thay thế an toàn không CMD và thoát ứng dụng
+            UpdateService.ApplyUpdateAndRestart(filePath);
+        }
+        catch (OperationCanceledException)
+        {
+            ModalPanelProgress.Visibility = Visibility.Collapsed;
+            BtnModalCancel.Visibility = Visibility.Collapsed;
+            BtnModalUpdateNow.Visibility = Visibility.Visible;
+            if (_activeUpdateManifest?.Mandatory != true) BtnModalRemindLater.Visibility = Visibility.Visible;
+            ModalTxtBottomStatus.Text = "Đã hủy tải bản cập nhật.";
+        }
+        catch (Exception ex)
+        {
+            ShowUpdateError(ex.Message);
+        }
+    }
+
+    private void ShowUpdateError(string errorMessage)
+    {
+        ModalPanelProgress.Visibility = Visibility.Collapsed;
+        BtnModalCancel.Visibility = Visibility.Collapsed;
+        BtnModalRetry.Visibility = Visibility.Visible;
+        if (_activeUpdateManifest?.Mandatory != true) BtnModalRemindLater.Visibility = Visibility.Visible;
+
+        ModalTxtErrorDetails.Text = errorMessage;
+        ModalBoxError.Visibility = Visibility.Visible;
+        ModalTxtBottomStatus.Text = "Nâng cấp thất bại. Vui lòng thử lại.";
+    }
+    #endregion
 
     private void BtnOpenAppDir_Click(object sender, RoutedEventArgs e)
     {

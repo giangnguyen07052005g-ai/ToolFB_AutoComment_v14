@@ -997,7 +997,7 @@
                                     <StackPanel>
                                         <Grid Margin="0,0,0,6">
                                             <TextBlock Text="Phiên bản đang chạy:" FontSize="12" Foreground="{StaticResource TextBody}" />
-                                            <TextBlock Text="v14.0.0 (WPF Win-x64)" FontWeight="Bold" FontSize="12" Foreground="{StaticResource SuccessGreen}" HorizontalAlignment="Right" />
+                                            <TextBlock x:Name="LblCurrentVersionRunning" Text="v14.0.0 (WPF Win-x64)" FontWeight="Bold" FontSize="12" Foreground="{StaticResource SuccessGreen}" HorizontalAlignment="Right" />
                                         </Grid>
                                         <Grid Margin="0,0,0,6">
                                             <TextBlock Text="Kho lưu trữ phát hành:" FontSize="12" Foreground="{StaticResource TextBody}" />
@@ -1029,6 +1029,151 @@
 
                 </Grid>
             </Grid>
+
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- 3. IN-APP UPDATE MODAL OVERLAY (100% TRONG APP - KHÔNG CMD)    -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <Grid x:Name="OverlayUpdateModal" Grid.ColumnSpan="2" Visibility="Collapsed" Background="#D9080A0E">
+                <Border Background="#14171E" BorderBrush="{StaticResource PrimaryGold}" BorderThickness="1.5"
+                        CornerRadius="14" Width="620" MaxHeight="600" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#000000" BlurRadius="30" Opacity="0.8" ShadowDepth="6" />
+                    </Border.Effect>
+
+                    <Grid Margin="24">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" /> <!-- Header -->
+                            <RowDefinition Height="Auto" /> <!-- Version Comparison -->
+                            <RowDefinition Height="*" />    <!-- Release Notes / Details -->
+                            <RowDefinition Height="Auto" /> <!-- Progress & Status Stages -->
+                            <RowDefinition Height="Auto" /> <!-- Error Alert (if any) -->
+                            <RowDefinition Height="Auto" /> <!-- Actions Bar -->
+                        </Grid.RowDefinitions>
+
+                        <!-- Row 0: Modal Header -->
+                        <Grid Grid.Row="0" Margin="0,0,0,16">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border Background="#261E05" BorderBrush="{StaticResource PrimaryGold}" BorderThickness="1" CornerRadius="8" Width="36" Height="36" Margin="0,0,12,0">
+                                    <TextBlock Text="🚀" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="CẬP NHẬT PHIÊN BẢN MỚI" FontWeight="Bold" FontSize="16" Foreground="{StaticResource PrimaryGold}" />
+                                    <TextBlock Text="Nâng cấp tự động an toàn trực tiếp từ GitHub Releases" FontSize="11" Foreground="{StaticResource TextMuted}" />
+                                </StackPanel>
+                                <Border x:Name="ModalBadgeMandatory" Background="{StaticResource DangerRed}" CornerRadius="4" Padding="6,2" Margin="12,0,0,0" Visibility="Collapsed" VerticalAlignment="Center">
+                                    <TextBlock Text="BẮT BUỘC" Foreground="#FFFFFF" FontSize="10" FontWeight="Bold" />
+                                </Border>
+                            </StackPanel>
+
+                            <Button x:Name="BtnModalClose" Content="✕" Width="30" Height="30" HorizontalAlignment="Right"
+                                    Style="{StaticResource BtnBase}" Background="Transparent" BorderThickness="0"
+                                    Foreground="{StaticResource TextMuted}" Click="BtnModalClose_Click" />
+                        </Grid>
+
+                        <!-- Row 1: Version Comparison Card -->
+                        <Border Grid.Row="1" Background="#0E1015" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="10" Padding="14" Margin="0,0,0,14">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Phiên bản hiện tại" Foreground="{StaticResource TextMuted}" FontSize="11" />
+                                    <TextBlock x:Name="ModalTxtCurrentVer" Text="v14.0.0" Foreground="{StaticResource TextWhite}" FontSize="16" FontWeight="Bold" Margin="0,3,0,0" />
+                                    <TextBlock Text="Đang chạy trên máy" Foreground="{StaticResource TextDim}" FontSize="10" />
+                                </StackPanel>
+
+                                <TextBlock Grid.Column="1" Text="➔" Foreground="{StaticResource PrimaryGold}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" Margin="16,0" />
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Phiên bản phát hành mới" Foreground="{StaticResource TextMuted}" FontSize="11" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                                        <TextBlock x:Name="ModalTxtLatestVer" Text="v14.1.0" Foreground="{StaticResource SuccessGreen}" FontSize="16" FontWeight="Bold" />
+                                        <Border Background="#163820" CornerRadius="3" Padding="5,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="MỚI NHẤT" Foreground="{StaticResource SuccessGreen}" FontSize="9" FontWeight="Bold" />
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock x:Name="ModalTxtPackageSize" Text="Dung lượng: ~87 MB" Foreground="{StaticResource TextDim}" FontSize="10" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <!-- Row 2: Release Notes -->
+                        <Border Grid.Row="2" Background="#0C0E12" BorderBrush="{StaticResource BorderBrushColor}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,14" MaxHeight="140">
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Top" Text="Nội dung thay đổi &amp; Tính năng mới:" FontWeight="SemiBold" FontSize="11" Foreground="{StaticResource InfoBlue}" Margin="0,0,0,6" />
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <TextBlock x:Name="ModalTxtReleaseNotes" Text="Đang tải ghi chú..." FontSize="11" Foreground="{StaticResource TextBody}" TextWrapping="Wrap" />
+                                </ScrollViewer>
+                            </DockPanel>
+                        </Border>
+
+                        <!-- Row 3: Progress & 7 Status Stages -->
+                        <StackPanel Grid.Row="3" x:Name="ModalPanelProgress" Margin="0,0,0,14" Visibility="Collapsed">
+                            <!-- Progress Bar & Percentage -->
+                            <Grid Margin="0,0,0,6">
+                                <TextBlock x:Name="ModalTxtProgressStatus" Text="Đang tải gói cập nhật..." FontSize="12" Foreground="{StaticResource TextWhite}" FontWeight="SemiBold" />
+                                <TextBlock x:Name="ModalTxtPercent" Text="0%" FontSize="12" Foreground="{StaticResource PrimaryGold}" FontWeight="Bold" HorizontalAlignment="Right" />
+                            </Grid>
+
+                            <ProgressBar x:Name="ModalProgressBar" Minimum="0" Maximum="100" Value="0" Height="10"
+                                         Background="#1D212B" Foreground="{StaticResource PrimaryGold}" BorderThickness="0" Margin="0,0,0,6" />
+
+                            <Grid>
+                                <TextBlock x:Name="ModalTxtBytesDetail" Text="0 MB / 0 MB" FontSize="11" Foreground="{StaticResource TextMuted}" />
+                                <TextBlock x:Name="ModalTxtSpeedDetail" Text="0 KB/s" FontSize="11" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Right" />
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- Row 4: Error Alert Box (if failed) -->
+                        <Border Grid.Row="4" x:Name="ModalBoxError" Background="#261012" BorderBrush="{StaticResource DangerRed}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,14" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Text="⚠️ CẬP NHẬT KHÔNG THÀNH CÔNG" FontWeight="Bold" FontSize="11" Foreground="{StaticResource DangerRed}" Margin="0,0,0,4" />
+                                <TextBlock x:Name="ModalTxtErrorDetails" Text="Chi tiết lỗi..." FontSize="11" Foreground="{StaticResource TextBody}" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Row 5: Action Buttons -->
+                        <Grid Grid.Row="5">
+                            <TextBlock x:Name="ModalTxtBottomStatus" Text="Sẵn sàng cập nhật" FontSize="12" Foreground="{StaticResource TextMuted}" VerticalAlignment="Center" HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" MaxWidth="320" />
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button x:Name="BtnModalRetry" Content="🔄 Thử Lại" Style="{StaticResource BtnWarning}" Height="34" Padding="14,0" Margin="0,0,10,0" Visibility="Collapsed" Click="BtnModalRetry_Click" />
+                                <Button x:Name="BtnModalCancel" Content="Hủy Bỏ" Style="{StaticResource BtnBase}" Height="34" Padding="14,0" Margin="0,0,10,0" Visibility="Collapsed" Click="BtnModalCancel_Click" />
+                                <Button x:Name="BtnModalRemindLater" Content="Để Sau" Style="{StaticResource BtnBase}" Height="34" Padding="14,0" Margin="0,0,10,0" Click="BtnModalRemindLater_Click" />
+                                <Button x:Name="BtnModalUpdateNow" Content="⚡ Cập Nhật Ngay" Style="{StaticResource BtnPrimary}" Height="34" Padding="18,0" Click="BtnModalUpdateNow_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <!-- 4. TOAST NOTIFICATION (THÔNG BÁO NỔI GÓC PHẢI SAU KHI UPDATE)      -->
+            <!-- ═══════════════════════════════════════════════════════════════ -->
+            <Border x:Name="ToastNotificationCard" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Margin="0,20,24,0" Background="#162E1D" BorderBrush="{StaticResource SuccessGreen}" BorderThickness="1.5"
+                    CornerRadius="10" Padding="16,12" Visibility="Collapsed" MaxWidth="420">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000" BlurRadius="20" Opacity="0.7" ShadowDepth="4" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="32" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="🎉" FontSize="20" VerticalAlignment="Center" />
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,12,0">
+                        <TextBlock Text="CẬP NHẬT THÀNH CÔNG!" FontWeight="Bold" FontSize="12" Foreground="{StaticResource SuccessGreen}" />
+                        <TextBlock x:Name="ToastNotificationMessage" Text="Bạn đang chạy phiên bản mới nhất." FontSize="11" Foreground="{StaticResource TextWhite}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button Grid.Column="2" Content="✕" Width="22" Height="22" Background="Transparent" BorderThickness="0"
+                            Foreground="{StaticResource TextMuted}" Style="{StaticResource BtnBase}" Click="BtnCloseToast_Click" VerticalAlignment="Top" />
+                </Grid>
+            </Border>
         </Grid>
     </Border>
 </Window>

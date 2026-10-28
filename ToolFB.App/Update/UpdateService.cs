@@ -40,6 +40,19 @@ public class UpdateService
 
     public UpdateService()
     {
+        // 1. Đọc phiên bản từ github_update.json trước
+        try
+        {
+            var s = UpdateSettings.Load();
+            if (!string.IsNullOrWhiteSpace(s.CurrentVersion))
+            {
+                CurrentVersion = s.CurrentVersion.TrimStart('v', 'V');
+                return;
+            }
+        }
+        catch { }
+
+        // 2. Fallback sang FileVersionInfo nếu không có file cấu hình
         string? procPath = Environment.ProcessPath;
         if (!string.IsNullOrEmpty(procPath) && File.Exists(procPath))
         {
@@ -264,6 +277,23 @@ public class UpdateService
                 }
             }
 
+            // Verify Zip package integrity and structure
+            try
+            {
+                using var zipCheck = System.IO.Compression.ZipFile.OpenRead(destPath);
+                bool hasApp = zipCheck.Entries.Any(e => e.Name.Equals("ToolFB.App.exe", StringComparison.OrdinalIgnoreCase));
+                if (!hasApp)
+                {
+                    try { File.Delete(destPath); } catch { }
+                    return (false, string.Empty, "Gói cập nhật không chứa file thực thi ToolFB.App.exe hợp lệ!");
+                }
+            }
+            catch (Exception zEx)
+            {
+                try { File.Delete(destPath); } catch { }
+                return (false, string.Empty, $"File gói cập nhật bị lỗi cấu trúc nén: {zEx.Message}");
+            }
+
             return (true, destPath, string.Empty);
         }
         catch (Exception ex)
@@ -278,17 +308,35 @@ public class UpdateService
         string currentExe = Process.GetCurrentProcess().MainModule?.FileName ?? Path.Combine(currentAppDir, "ToolFB.App.exe");
         int currentPid = Environment.ProcessId;
 
-        // Path to updater executable
-        string updaterExe = Path.Combine(currentAppDir, "ToolFB.Updater.exe");
-        if (!File.Exists(updaterExe))
+        // Path to updater executable in current app directory
+        string sourceUpdaterExe = Path.Combine(currentAppDir, "ToolFB.Updater.exe");
+        if (!File.Exists(sourceUpdaterExe))
         {
             var alt = Path.Combine(currentAppDir, "..", "ToolFB.Updater", "bin", "Debug", "net8.0", "ToolFB.Updater.exe");
-            if (File.Exists(alt)) updaterExe = alt;
+            if (File.Exists(alt)) sourceUpdaterExe = alt;
         }
 
-        if (!File.Exists(updaterExe))
+        if (!File.Exists(sourceUpdaterExe))
         {
             throw new FileNotFoundException("Không tìm thấy chương trình cập nhật ToolFB.Updater.exe!");
+        }
+
+        // Copy updater to TEMP directory so it doesn't lock target directory files
+        string tempUpdaterDir = Path.Combine(Path.GetTempPath(), "ToolFB_Updater_Bin");
+        Directory.CreateDirectory(tempUpdaterDir);
+        string updaterExe = Path.Combine(tempUpdaterDir, "ToolFB.Updater.exe");
+        try
+        {
+            File.Copy(sourceUpdaterExe, updaterExe, true);
+            string sourceConfig = Path.ChangeExtension(sourceUpdaterExe, ".runtimeconfig.json");
+            if (File.Exists(sourceConfig))
+            {
+                File.Copy(sourceConfig, Path.Combine(tempUpdaterDir, Path.GetFileName(sourceConfig)), true);
+            }
+        }
+        catch
+        {
+            updaterExe = sourceUpdaterExe;
         }
 
         string backupDir = Path.Combine(Path.GetTempPath(), "ToolFB_Backup");
@@ -297,16 +345,21 @@ public class UpdateService
         {
             FileName = updaterExe,
             Arguments = $"--pid {currentPid} --package \"{packageZipPath}\" --target \"{currentAppDir}\" --launch \"{currentExe}\" --backup \"{backupDir}\"",
-            UseShellExecute = true,
-            CreateNoWindow = false
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            WindowStyle = ProcessWindowStyle.Hidden,
+            WorkingDirectory = tempUpdaterDir
         };
 
         Process.Start(psi);
 
         // Gracefully close current WPF application
-        Application.Current.Dispatcher.Invoke(() =>
+        Application.Current?.Dispatcher?.Invoke(() =>
         {
             Application.Current.Shutdown(0);
         });
+
+        // Ensure process exits promptly
+        Task.Delay(1000).ContinueWith(_ => Environment.Exit(0));
     }
 }
