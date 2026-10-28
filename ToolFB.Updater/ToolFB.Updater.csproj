@@ -5,6 +5,14 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Version>14.1.0</Version>
+    <AssemblyVersion>14.1.0.0</AssemblyVersion>
+    <FileVersion>14.1.0.0</FileVersion>
+    <Product>GIANG DEV Auto-Updater</Product>
+    <Description>Trình Cập Nhật Tự Động GIANG DEV</Description>
+    <Company>GIANG DEV</Company>
+    <Authors>GIANG DEV</Authors>
+    <Copyright>© 2026 GIANG DEV. All rights reserved.</Copyright>
     <ApplicationIcon>Assets\app_icon.ico</ApplicationIcon>
   </PropertyGroup>
 
