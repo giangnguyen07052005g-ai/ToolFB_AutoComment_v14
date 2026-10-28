@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -21,9 +21,6 @@ public class LogItem
     public string Timestamp { get; set; } = DateTime.Now.ToString("HH:mm:ss");
     public string Level { get; set; } = "INFO"; // INFO, SUCCESS, WARNING, ERROR
     public string Message { get; set; } = string.Empty;
-    public Brush ForegroundBrush { get; set; } = Brushes.White;
-    public Brush BadgeBackground { get; set; } = new SolidColorBrush(Color.FromRgb(0x1E, 0x23, 0x29));
-    public Brush BadgeBorder { get; set; } = new SolidColorBrush(Color.FromRgb(0x2B, 0x31, 0x39));
 }
 
 public partial class MainWindow : Window
@@ -388,41 +385,17 @@ public partial class MainWindow : Window
     #region Logging & Throttled Batch Dispatcher
     private void OnEngineLogReceived(object? sender, LogEventArgs e)
     {
-        Brush color = (SolidColorBrush)FindResource("TextBody");
-        Brush bg = new SolidColorBrush(Color.FromRgb(0x1E, 0x23, 0x29));
-        Brush bd = new SolidColorBrush(Color.FromRgb(0x2B, 0x31, 0x39));
-        string lvl = e.Level.ToUpperInvariant();
-
-        switch (e.Level.ToLowerInvariant())
+        string lvl = (e.Level ?? "INFO").ToUpperInvariant();
+        if (lvl != "SUCCESS" && lvl != "WARNING" && lvl != "ERROR")
         {
-            case "success":
-                color = (SolidColorBrush)FindResource("SuccessGreen");
-                bg = new SolidColorBrush(Color.FromRgb(0x11, 0x27, 0x20));
-                bd = new SolidColorBrush(Color.FromRgb(0x19, 0x48, 0x3A));
-                lvl = "SUCCESS";
-                break;
-            case "warning":
-                color = (SolidColorBrush)FindResource("PrimaryGold");
-                bg = new SolidColorBrush(Color.FromRgb(0x2E, 0x27, 0x12));
-                bd = new SolidColorBrush(Color.FromRgb(0x52, 0x43, 0x17));
-                lvl = "WARNING";
-                break;
-            case "error":
-                color = (SolidColorBrush)FindResource("DangerRed");
-                bg = new SolidColorBrush(Color.FromRgb(0x33, 0x17, 0x1F));
-                bd = new SolidColorBrush(Color.FromRgb(0x58, 0x24, 0x2F));
-                lvl = "ERROR";
-                break;
+            lvl = "INFO";
         }
 
         _pendingLogs.Enqueue(new LogItem
         {
             Timestamp = e.Time.ToString("HH:mm:ss"),
             Level = lvl,
-            Message = e.Message,
-            ForegroundBrush = color,
-            BadgeBackground = bg,
-            BadgeBorder = bd
+            Message = e.Message ?? string.Empty
         });
     }
 

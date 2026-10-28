@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Windows;
 using ToolFB.App.Services;
@@ -14,14 +14,19 @@ public partial class App : Application
 
         // Global crash handling with alert throttling to prevent cascading dialogs
         DateTime lastCrashAlert = DateTime.MinValue;
+        string lastCrashMessage = string.Empty;
         DispatcherUnhandledException += (s, args) =>
         {
             RecordCrash(args.Exception);
-            if ((DateTime.Now - lastCrashAlert).TotalSeconds > 2)
+            bool isSameMessage = string.Equals(args.Exception.Message, lastCrashMessage, StringComparison.OrdinalIgnoreCase);
+            double secondsSinceLastAlert = (DateTime.Now - lastCrashAlert).TotalSeconds;
+
+            if ((!isSameMessage && secondsSinceLastAlert > 5) || secondsSinceLastAlert > 30)
             {
                 lastCrashAlert = DateTime.Now;
-                MessageBox.Show($"Đã xảy ra lỗi không mong muốn:\n{args.Exception.Message}\n\nChi tiết đã ghi vào file crash_log.txt",
-                    "GIANG DEV — Cảnh Báo", MessageBoxButton.OK, MessageBoxImage.Error);
+                lastCrashMessage = args.Exception.Message;
+                MessageBox.Show($"Đã xảy ra sự cố không mong muốn:\n{args.Exception.Message}\n\nChi tiết sự cố đã được tự động lưu vào file crash_log.txt",
+                    "GIANG DEV — Thông Báo Hệ Thống", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             args.Handled = true;
         };

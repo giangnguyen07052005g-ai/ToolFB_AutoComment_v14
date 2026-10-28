@@ -1,10 +1,10 @@
 ﻿{
   "version": "14.1.0",
   "downloadUrl": "https://github.com/giangnguyen07052005g-ai/ToolFB_AutoComment_v14/releases/download/v14.1.0/ToolFB_v14.1.0.zip",
-  "sha256": "0518395e9b7bdd2de4559ce929f2d6252440730badff222f2f1e7b7df3a8441b",
-  "signature": "x3a/kV46OkAl2ztL7FG9yJXhBSZK2LjAb2MX78JHBZh1FALAyXd7lMtLNVh3/9kpGDUcbBbYtxrvqPp31MvYFw==",
+  "sha256": "92121fbbbb9db0747afae5e57377250630450e6858b03b18b5947f385c8a055c",
+  "signature": "jkDW0LvXTfTcsOJAdUiISk\u002BiBAAl5Iz9Cada4Li05V5pAJmOm7zwY/zF1djtW17vY79NORt7Ekj5Urtdefsqfg==",
   "releaseNotes": "B\u1EA2N C\u1EACP NH\u1EACT CH\u00CDNH TH\u1EE8C v14.1.0 PRO\n\n- T\u1EF1 \u0111\u1ED9ng c\u1EADp nh\u1EADt 100% trong app, kh\u00F4ng m\u1EDF c\u1EEDa s\u1ED5 CMD \u0111en hay Explorer.\n- T\u1EF1 \u0111\u1ED9ng thay th\u1EBF t\u1EC7p v\u00E0 kh\u1EDFi \u0111\u1ED9ng l\u1EA1i phi\u00EAn b\u1EA3n m\u1EDBi an to\u00E0n.\n- X\u00E1c minh ch\u1EEF k\u00FD s\u1ED1 m\u1EADt m\u00E3 h\u1ECDc ECDSA P-256 v\u00E0 m\u00E3 b\u0103m SHA-256 ch\u1ED1ng l\u1ED7i t\u1EC7p.\n- Gi\u1EEF nguy\u00EAn v\u1EB9n to\u00E0n b\u1ED9 t\u00E0i kho\u1EA3n, proxy, b\u00E0i vi\u1EBFt m\u1EE5c ti\u00EAu v\u00E0 c\u1EA5u h\u00ECnh m\u00E1y.\n- B\u1EA3o m\u1EADt th\u00F4ng tin gi\u1EA5y ph\u00E9p b\u1EA3n quy\u1EC1n v\u00E0 k\u1EBFt n\u1ED1i Telegram bot chu\u1EA9n x\u00E1c.\n",
   "minimumVersion": null,
   "mandatory": false,
-  "publishedAt": "2026-10-28T15:32:08.3656006Z"
+  "publishedAt": "2026-10-28T17:06:07.6764618Z"
 }
