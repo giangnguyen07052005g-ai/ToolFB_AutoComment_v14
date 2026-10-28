@@ -1,10 +1,10 @@
 ﻿{
   "version": "14.1.0",
   "downloadUrl": "https://github.com/giangnguyen07052005g-ai/ToolFB_AutoComment_v14/releases/download/v14.1.0/ToolFB_v14.1.0.zip",
-  "sha256": "6aa4cd9c3bc15914bb2ebf98a6a269b31b343221586ebba744f2e667e940982b",
-  "signature": "jBKPnSy9BeLjkuzhe\u002B5HP4eirkPfQYzKzuy3Omsja0TkChfoOUqDRGFgEGiiPJ3tMQ43s0RUkOwAOnryifDssw==",
-  "releaseNotes": "B\u1EA2N C\u1EACP NH\u1EACT CH\u00CDNH TH\u1EE8C v14.1.0 PRO\n\n- T\u1EF1 \u0111\u1ED9ng c\u1EADp nh\u1EADt 100% trong app, kh\u00F4ng m\u1EDF c\u1EEDa s\u1ED5 CMD \u0111en hay Explorer.\n- T\u1EF1 \u0111\u1ED9ng thay th\u1EBF t\u1EC7p v\u00E0 kh\u1EDFi \u0111\u1ED9ng l\u1EA1i phi\u00EAn b\u1EA3n m\u1EDBi an to\u00E0n.\n- X\u00E1c minh ch\u1EEF k\u00FD s\u1ED1 m\u1EADt m\u00E3 h\u1ECDc ECDSA P-256 v\u00E0 m\u00E3 b\u0103m SHA-256 ch\u1ED1ng l\u1ED7i t\u1EC7p.\n- Gi\u1EEF nguy\u00EAn v\u1EB9n to\u00E0n b\u1ED9 t\u00E0i kho\u1EA3n, proxy, b\u00E0i vi\u1EBFt m\u1EE5c ti\u00EAu v\u00E0 c\u1EA5u h\u00ECnh m\u00E1y.\n- B\u1EA3o m\u1EADt th\u00F4ng tin gi\u1EA5y ph\u00E9p b\u1EA3n quy\u1EC1n v\u00E0 k\u1EBFt n\u1ED1i Telegram bot chu\u1EA9n x\u00E1c.\n",
+  "sha256": "3c72354be952713d72a6f04c12800224a39c8c8dcfdcfd2ebfec4261448c9795",
+  "signature": "JHFMh6IHqo\u002BP4TBoclee9NSvEbrCMNXdLpnJonFIQWJq0JTFYLQAl/57z75O/tV/nvvbMAH0i85BS2OHdI6\u002Bvg==",
+  "releaseNotes": "B\u1EA2N C\u1EACP NH\u1EACT CH\u00CDNH TH\u1EE8C v14.1.0 PRO - GIANG DEV\n\n- B\u1ED5 sung ch\u1EE9c n\u0103ng t\u1EF1 \u0111\u1ED9ng l\u01B0u link b\u00E0i vi\u1EBFt / b\u00ECnh lu\u1EADn \u0111\u00E3 cmt v\u00E0o file comment_links.txt chu\u1EA9n Facebook link.\n- Kh\u1EAFc ph\u1EE5c tri\u1EC7t \u0111\u1EC3 l\u1ED7i giao di\u1EC7n v\u00E0 b\u1ED5 sung \u0111\u1EA7y \u0111\u1EE7 b\u1ED9 th\u01B0 vi\u1EC7n \u0111\u1ED3 h\u1ECDa WPF Windows.\n- T\u1EF1 \u0111\u1ED9ng thay th\u1EBF t\u1EC7p v\u00E0 kh\u1EDFi \u0111\u1ED9ng l\u1EA1i app an to\u00E0n, kh\u00F4ng m\u1EDF c\u1EEDa s\u1ED5 CMD \u0111en hay Explorer.\n- B\u1EA3o v\u1EC7 nguy\u00EAn v\u1EB9n 100% c\u1EA5u h\u00ECnh, t\u00E0i kho\u1EA3n, gi\u1EA5y ph\u00E9p b\u1EA3n quy\u1EC1n HWID v\u00E0 bot Telegram.\n- T\u1ED1i \u01B0u t\u1ED1c \u0111\u1ED9 t\u1EA3i v\u1EC1 g\u00F3i c\u1EADp nh\u1EADt si\u00EAu nh\u1EB9 (~4.2 MB) v\u00E0 x\u00E1c th\u1EF1c ch\u1EEF k\u00FD ECDSA P-256.",
   "minimumVersion": null,
   "mandatory": false,
-  "publishedAt": "2026-10-28T17:24:18.0951631Z"
+  "publishedAt": "2026-10-28T17:40:07.0130251Z"
 }
