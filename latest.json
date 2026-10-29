@@ -1,10 +1,10 @@
 ﻿{
   "version": "14.1.1",
   "downloadUrl": "https://github.com/giangnguyen07052005g-ai/ToolFB_AutoComment_v14/releases/download/v14.1.1/ToolFB_v14.1.1.zip",
-  "sha256": "d0b47c0c45fe0cf3ea2c380f4b25131d0a2fdbc44bb3ae587301dd577f360c0a",
-  "signature": "LMjfEeQguQpMVB7hEJ2aZH2et/N8IqzA9gqf5XOxwYIRLTYtakQ\u002BiL8SJeTxsbXwYQBeus6RwWwwDnLhg00lmA==",
-  "releaseNotes": "B\u1EA2N C\u1EACP NH\u1EACT CH\u00CDNH TH\u1EE8C v14.1.1 PRO - GIANG DEV\n\n- B\u1ED5 sung ch\u1EE9c n\u0103ng t\u1EF1 \u0111\u1ED9ng l\u01B0u link b\u00E0i vi\u1EBFt / b\u00ECnh lu\u1EADn \u0111\u00E3 cmt v\u00E0o file comment_links.txt chu\u1EA5n Facebook link.\n- Kh\u1EAFc ph\u1EE5c tri\u1EC7t \u0111\u1EC3 l\u1ED7i ghi \u0111\u00E8 t\u1EC7p Updater v\u00E0 l\u1ED7i DLL giao di\u1EC7n tr\u00EAn Windows.\n- T\u1EF1 \u0111\u1ED9ng thay th\u1EBF t\u1EC7p v\u00E0 kh\u1EDFi \u0111\u1ED9ng l\u1EA1i app an to\u00E0n 100%, kh\u00F4ng m\u1EDF c\u1EEDa s\u1ED5 CMD \u0111en hay Explorer.\n- B\u1EA3o v\u1EC7 nguy\u00EAn v\u1EB9n 100% c\u1EA5u h\u00ECnh, t\u00E0i kho\u1EA3n, gi\u1EA5y ph\u00E9p b\u1EA3n quy\u1EC1n HWID v\u00E0 bot Telegram.\n- T\u1ED1i \u01B0u t\u1ED1c \u0111\u1ED9 t\u1EA3i v\u1EC1 g\u00F3i c\u1EADp nh\u1EADt si\u00EAu nh\u1EB9 (~4.2 MB) v\u00E0 x\u00E1c th\u1EF1c ch\u1EEF k\u00FD ECDSA P-256.",
+  "sha256": "2dd46ff20d02db184793202d144d5bf7dc115e3c949b736f14bb5e97b9a0d432",
+  "signature": "XhdllYUuBR/ynPLkVZyQBVlxrjE\u002Bn/99nKxblT9AUqNnnxI7aBPw/Wkml82A85CoLdNUQL9jvaHFH4TLJoxmEQ==",
+  "releaseNotes": "B\u1EA2N C\u1EACP NH\u1EACT CH\u00CDNH TH\u1EE8C v14.1.1 PRO - GIANG DEV\n\n- B\u1ED5 sung ch\u1EE9c n\u0103ng t\u1EF1 \u0111\u1ED9ng l\u01B0u link b\u00E0i vi\u1EBFt / b\u00ECnh lu\u1EADn \u0111\u00E3 cmt v\u00E0o file comment_links.txt chu\u1EA9n Facebook link.\n- Kh\u1EAFc ph\u1EE5c tri\u1EC7t \u0111\u1EC3 l\u1ED7i ghi \u0111\u00E8 t\u1EC7p Updater v\u00E0 l\u1ED7i DLL giao di\u1EC7n tr\u00EAn Windows.\n- T\u1EF1 \u0111\u1ED9ng thay th\u1EBF t\u1EC7p v\u00E0 kh\u1EDFi \u0111\u1ED9ng l\u1EA1i app an to\u00E0n 100%, kh\u00F4ng m\u1EDF c\u1EEDa s\u1ED5 CMD \u0111en hay Explorer.\n- B\u1EA3o v\u1EC7 nguy\u00EAn v\u1EB9n 100% c\u1EA5u h\u00ECnh, t\u00E0i kho\u1EA3n, gi\u1EA5y ph\u00E9p b\u1EA3n quy\u1EC1n HWID v\u00E0 bot Telegram.\n- T\u1ED1i \u01B0u t\u1ED1c \u0111\u1ED9 t\u1EA3i v\u1EC1 g\u00F3i c\u1EADp nh\u1EADt si\u00EAu nh\u1EB9 (~4.1 MB) v\u00E0 x\u00E1c th\u1EF1c ch\u1EEF k\u00FD ECDSA P-256.",
   "minimumVersion": null,
   "mandatory": false,
-  "publishedAt": "2026-10-28T17:55:34.0007512Z"
+  "publishedAt": "2026-10-29T03:20:11.8618765Z"
 }
